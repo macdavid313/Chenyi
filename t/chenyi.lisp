@@ -9,7 +9,8 @@
 
 (subtest "CONSTANTS"
   ;;; TYPE
-  (dolist (val (list inf32 -inf32 nan32))
+  (dolist (val #-ecl (list inf32 -inf32 nan32)
+               #+ecl (list inf32 -inf32))
     (is-type val 'single-float))
   (dolist (val (list +e+ +pi+ π +euler+ +eulergamma+ γ
                      +catalan+ +golden+ φ
