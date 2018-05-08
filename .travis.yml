@@ -36,8 +36,5 @@ before_script:
 
 
 script:
-  # prove-asdf must be independent.
-  - ros +Q -e '(require "asdf")' -l prove-asdf.asd -e '(asdf:load-system :prove-asdf)'
-  - ros -l prove.asd -e '(ql:quickload :prove)'
-  - ros -l chenyi-test.asd -e '(ql:quickload :chenyi-test)'
-  - ros -e '(ql:quickload :prove) (uiop:quit (if (prove:run-test-system :chenyi-test) 0 1))'
+  - ros install prove
+  - run-prove chenyi-test.asd
