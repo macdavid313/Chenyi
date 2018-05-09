@@ -159,6 +159,21 @@
 
 (defvar inf inf64 "Positive infinity of type double-float.")
 
+(defmethod print-object ((o (eql inf32)) stream)
+  (format stream "Inf32"))
+
+(defmethod print-object ((o (eql -inf32)) stream)
+  (format stream "-Inf32"))
+
+(defmethod print-object ((o (eql inf64)) stream)
+  (format stream "Inf"))
+
+(defmethod print-object ((o (eql -inf64)) stream)
+  (format stream "-Inf"))
+
+(defmethod print-object ((o (eql inf)) stream)
+  (format stream "Inf"))
+
 #+ccl
 (progn
   (declaim (inline %nan-p))
@@ -182,7 +197,7 @@
     #+allegro excl:*nan-single*
     #+ccl (coerce ccl::double-float-nan 'single-float)
     #+cmucl (kernel:make-single-float #x7fc00000)
-    #+ecl (prog1 nil (warn "Your Lisp ~A-~A doesn't support the not-a-number value of type single-float natively. So nan32 has been set to nil."
+    #+ecl (prog1 nil (warn "Your Lisp ~A-~A doesn't support the not-a-number value of type single-float natively, so nan32 has been set to nil."
                            (lisp-implementation-type) (lisp-implementation-version)))
     #+lispworks system::*single-float-nan*
     #+sbcl (sb-kernel::make-single-float #x7fc00000)
@@ -199,3 +214,12 @@
     "The not-a-number value of type double-float.")
 
 (defvar nan nan64 "The not-a-number value of type double-float.")
+
+(defmethod print-object ((o (eql nan32)) stream)
+  (format stream "NaN32"))
+
+(defmethod print-object ((o (eql nan64)) stream)
+  (format stream "NaN"))
+
+(defmethod print-object ((o (eql nan)) stream)
+  (format stream "NaN"))
