@@ -3,3 +3,18 @@
 (defpackage #:chenyi-test
   (:use #:cl #:chenyi #:prove))
 (in-package #:chenyi-test)
+
+(defun test-rel (got expected relative-error &optional description)
+  (let (status)
+    (cond ((or (or (nan-p got) (nan-p expected))
+               (or (infinity-p got) (infinity-p expected)))
+           (setq status nil))
+          ((or (< 0 expected least-positive-double-float)
+               (< least-negative-double-float expected 0))
+           (setq status t))
+          ((not (zerop expected))
+           (setq status (<= (/ (abs (- got expected))
+                              (abs expected))
+                           relative-error)))
+          (t (setq status (<= (abs got) relative-error))))
+    (ok status description)))

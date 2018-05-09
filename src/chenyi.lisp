@@ -15,7 +15,7 @@
    #:+pi/2+ #:+pi/4+ #:+1/pi+ #:+2/pi+
    #:+ln2+ #:+ln10+ #:+ln-pi+
    ;;; Infinities and Not-a-number
-   #:float-infinity-p #:inf32 #:inf64 #:-inf32 #:-inf64 #:inf
+   #:infinity-p #:inf32 #:inf64 #:-inf32 #:-inf64 #:inf
    #:nan-p #:nan32 #:nan64 #:nan
    ;;; Elementary functions
    #:log1p/f64 #:log1p #:expm1/f64 #:expm1 

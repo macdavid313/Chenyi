@@ -10,7 +10,7 @@
                +pi/2+ +pi/4+ +1/pi+ +2/pi+
                +ln2+ +ln10+ +ln-pi+
                inf64 -inf64 nan64 inf nan)
-         (inline float-infinity-p nan-p))
+         (inline infinity-p nan-p))
 
 (define-constant
     +e+ #.(exp 1d0) :test '=
@@ -113,17 +113,18 @@
       (single-float (or (= 1F++0 f) (= -1F++0 f)))
       (double-float (or (= 1D++0 f) (= -1F++0 f))))))
 
-(defun float-infinity-p (f)
-  (declare (type float f)
-           #+lispworks (inline %float-infinity-p)
+(defun infinity-p (f)
+  (declare #+lispworks (inline %float-infinity-p)
            (optimize speed (safety 0) (space 0)))
-  (and (funcall #+abcl 'system::float-infinity-p
-                #+allegro 'excl:infinityp
-                #+ccl 'ccl::infinity-p
-                #+(or cmucl ecl) 'ext:float-infinity-p
-                #+lispworks '%float-infinity-p
-                #+sbcl 'sb-ext:float-infinity-p f)
-       t))
+  (typecase f
+    (float (and (funcall #+abcl 'system::float-infinity-p
+                         #+allegro 'excl:infinityp
+                         #+ccl 'ccl::infinity-p
+                         #+(or cmucl ecl) 'ext:float-infinity-p
+                         #+lispworks '%float-infinity-p
+                         #+sbcl 'sb-ext:float-infinity-p f)
+                t))
+    (t nil)))
 
 (defvar inf32
   #+(or abcl cmucl ecl) ext:single-float-positive-infinity
@@ -184,13 +185,15 @@
 (defun nan-p (n)
   (declare #+ccl (inline %nan-p)
            (optimize speed (safety 0) (space 0)))
-  (and (funcall #+abcl 'system:float-nan-p
-                #+allegro 'excl:nanp
-                #+ccl '%nan-p
-                #+(or cmucl ecl) 'ext:float-nan-p
-                #+lispworks 'system::nan-p
-                #+sbcl 'sb-ext:float-nan-p n)
-       t))
+  (typecase n
+    (float (and (funcall #+abcl 'system:float-nan-p
+                         #+allegro 'excl:nanp
+                         #+ccl '%nan-p
+                         #+(or cmucl ecl) 'ext:float-nan-p
+                         #+lispworks 'system::nan-p
+                         #+sbcl 'sb-ext:float-nan-p n)
+                t))
+    (t nil)))
 
 (defvar nan32
     #+abcl (system:make-single-float #x7fc00000)
