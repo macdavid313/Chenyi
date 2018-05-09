@@ -223,3 +223,4 @@
 
 (defmethod print-object ((o (eql nan)) stream)
   (format stream "NaN"))
+

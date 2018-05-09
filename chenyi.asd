@@ -18,10 +18,12 @@
   :version "0.1"
   :author "David Gu"
   :license ""
-  :depends-on (#:alexandria)
+  :depends-on (#:alexandria
+               #-abcl #:cffi)
   :components ((:module "src"
                 :components
-                ((:file "chenyi")))
+                ((:file "chenyi")
+                 (:file "macros")))
                (:module "src/elementary"
                 :components
                 ((:file "constants")

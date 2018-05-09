@@ -21,7 +21,8 @@
                #:prove)
   :components ((:module "t"
                 :components
-                ((:test-file "chenyi"))))
+                ((:file "chenyi")
+                 (:test-file "elementary"))))
   :description "Test system for chenyi"
 
   :defsystem-depends-on (:prove-asdf)
