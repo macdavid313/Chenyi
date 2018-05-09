@@ -7,13 +7,13 @@ env:
     - ROSWELL_BRANCH=release
     - ROSWELL_INSTALL_DIR=$HOME/.roswell
   matrix:
-    - LISP=sbcl-bin
-    - LISP=ccl-bin
-    - LISP=ecl
     - LISP=abcl
     - LISP=allegro
-    - LISP=cmucl
-
+    #- LISP=cmucl
+    - LISP=ccl-bin
+    - LISP=ecl
+    - LISP=sbcl-bin
+    
 addons:
   apt:
     packages:
