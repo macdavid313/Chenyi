@@ -22,7 +22,7 @@
   :components ((:module "t"
                 :components
                 ((:file "chenyi")
-                 (:test-file "elementary"))))
+                 (:test-file "sys"))))
   :description "Test system for chenyi"
 
   :defsystem-depends-on (:prove-asdf)

@@ -1,7 +1,7 @@
 ;;;; constants.lisp
-(in-package #:chenyi)
+(in-package #:chenyi.sys)
 
-(declaim (type single-float inf32 -inf32 nan32)
+(declaim (type single-float inf32 -inf32 #-ecl nan32)
          (type double-float
                +e+ +pi+ π +euler+ +eulergamma+ γ
                +catalan+ +golden+ φ
@@ -200,8 +200,7 @@
     #+allegro excl:*nan-single*
     #+ccl (coerce ccl::double-float-nan 'single-float)
     #+cmucl (kernel:make-single-float #x7fc00000)
-    #+ecl (prog1 nil (warn "Your Lisp ~A-~A doesn't support the not-a-number value of type single-float natively, so nan32 has been set to nil."
-                           (lisp-implementation-type) (lisp-implementation-version)))
+    #+ecl nil
     #+lispworks system::*single-float-nan*
     #+sbcl (sb-kernel::make-single-float #x7fc00000)
     "The not-a-number value of type single-float.")
@@ -226,4 +225,3 @@
 
 (defmethod print-object ((o (eql nan)) stream)
   (format stream "NaN"))
-

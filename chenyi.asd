@@ -19,15 +19,31 @@
   :author "David Gu"
   :license ""
   :depends-on (#:alexandria
-               #-abcl #:cffi)
+               #:cl-reexport
+               #-abcl #:cffi
+               #-abcl #:trivial-download
+               #-abcl #:trivial-extract)
   :components ((:module "src"
                 :components
-                ((:file "chenyi")
-                 (:file "macros")))
-               (:module "src/elementary"
+                ((:file "packages")
+                 (:file "chenyi")))
+               (:module "src/sys"
                 :components
-                ((:file "constants")
-                 (:file "functions"))))
+                ((:file "utils")
+                 (:file "constants")
+                 (:file "expm1")
+                 (:file "log1p")
+                 (:file "frexp")
+                 (:file "ldexp")
+                 (:file "hypot")
+                 (:file "fcmp")))
+               (:module "src/special"
+                :components
+                ((:file "gamma")
+                 (:file "beta")))
+               (:module "src/rng"
+                :components
+                ((:file "dSFMT"))))
   :description "A Math Library for Common Lisp"
   :long-description
   #.(with-open-file (stream (merge-pathnames
@@ -42,3 +58,13 @@
           (setf (fill-pointer seq) (read-sequence seq stream))
           seq)))
   :in-order-to ((test-op (test-op chenyi-test))))
+
+(eval-when (:load-toplevel :execute)
+  (let ((type (lisp-implementation-type))
+        (version (lisp-implementation-version)))
+    #-(or abcl allegro ccl cmucl ecl lispworks sbcl)
+    (error "Your lisp ~a-~a may not be well supported yet." type version)
+    #+abcl
+    (warn "Your lisp ~a-~a doesn't support dSFMT yet." type version)
+    #+ecl
+    (warn "Your lisp ~a-~a doesn't support NaN of type single-float yet." type version)))
