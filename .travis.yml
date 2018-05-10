@@ -1,5 +1,5 @@
 language: common-lisp
-sudo: false
+sudo: true
 
 env:
   # global:
@@ -22,7 +22,7 @@ env:
 #       - libc6-i386
       
 install:
-  - curl https://raw.githubusercontent.com/luismbo/cl-travis/master/install.sh | bash
+  - curl -L https://github.com/luismbo/cl-travis/raw/master/install.sh | sh
 
 # before_script:
 #   - ros --version
