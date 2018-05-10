@@ -2,17 +2,17 @@ language: common-lisp
 sudo: true
 
 env:
-  # global:
-  #   - PATH=~/.roswell/bin:$PATH
-  #   - ROSWELL_BRANCH=release
-  #   - ROSWELL_INSTALL_DIR=$HOME/.roswell
+  global:
+    - PATH=~/.roswell/bin:$PATH
+    #- ROSWELL_BRANCH=release
+    - ROSWELL_INSTALL_DIR=$HOME/.roswell
   matrix:
     - LISP=abcl
     #- LISP=allegro
     #- LISP=cmucl
-    - LISP=ccl
+    - LISP=ccl-bin
     - LISP=ecl
-    - LISP=sbcl
+    - LISP=sbcl-bin
     
 # addons:
 #   apt:
@@ -20,23 +20,24 @@ env:
 #       # it is required for some reason
 #       # to install allegrocl and cmucl
 #       - libc6-i386
-      
-install:
-  - curl -L https://github.com/luismbo/cl-travis/raw/master/install.sh | sh
 
-# before_script:
-#   - ros --version
-#   - ros config
-#   - ros -e '(princ (lisp-implementation-type))
-#             (terpri)
-#             (princ (lisp-implementation-version))
-#             (terpri)
-#             (princ *features*)
-#             (terpri)'
+os:
+  - osx
+  - linux
+
+install:
+  - curl -L https://raw.githubusercontent.com/roswell/roswell/master/scripts/install-for-ci.sh | sh
+
+before_script:
+  - ros --version
+  - ros config
+  - ros -e '(princ (lisp-implementation-type))
+            (terpri)
+            (princ (lisp-implementation-version))
+            (terpri)
+            (princ *features*)
+            (terpri)'
 
 script:
-  # - ros install prove
-  # - run-prove chenyi-test.asd
-  - cl -e '(ql:quickload :prove)
-           (ql:quickload :chenyi-test)
-           (asdf:test-system :chenyi)'
+  - ros install prove
+  - run-prove chenyi-test.asd
