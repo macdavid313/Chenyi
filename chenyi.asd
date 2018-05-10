@@ -43,7 +43,7 @@
                  (:file "beta")))
                (:module "src/rng"
                 :components
-                ((:file "dSFMT"))))
+                (#-abcl (:file "dSFMT"))))
   :description "A Math Library for Common Lisp"
   :long-description
   #.(with-open-file (stream (merge-pathnames

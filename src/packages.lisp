@@ -35,9 +35,9 @@
 (defpackage #:chenyi.rng
   (:use #:cl)
   (:nicknames #:cy.rng #:chenyi/rng #:cy/rng)
-  (:import-from #:trivial-download #:download)
-  (:import-from #:trivial-extract #:extract-zip)
-  (:export #:prepare-dsfmt-src)
+  #-abcl (:import-from #:trivial-download #:download)
+  #-abcl (:import-from #:trivial-extract #:extract-zip)
+  #-abcl (:export #:prepare-dsfmt-src)
   #-abcl (:documentation "This package contains various implementations for the Random Number Generator, including dSFMT.")
   #+abcl (:documentation "This package contains various implementations for the Random Number Generator."))
 
