@@ -105,8 +105,8 @@
 ;;; Infinities and Not-a-number
 #+lispworks
 (progn 
-  (declaim (inline %float-infinity-p))
-  (defun %float-infinity-p (f)
+  (declaim (inline %infinity-p))
+  (defun %infinity-p (f)
     ;; FIXME!
     ;; this doesn't look right ...
     (etypecase f
@@ -114,14 +114,14 @@
       (double-float (or (= 1D++0 f) (= -1F++0 f))))))
 
 (defun infinity-p (f)
-  (declare #+lispworks (inline %float-infinity-p)
+  (declare #+lispworks (inline %infinity-p)
            (optimize speed (safety 0) (space 0)))
   (typecase f
     (float (and (funcall #+abcl 'system::float-infinity-p
                          #+allegro 'excl:infinityp
                          #+ccl 'ccl::infinity-p
                          #+(or cmucl ecl) 'ext:float-infinity-p
-                         #+lispworks '%float-infinity-p
+                         #+lispworks '%infinity-p
                          #+sbcl 'sb-ext:float-infinity-p f)
                 t))
     (t nil)))
@@ -179,7 +179,7 @@
 (progn
   (declaim (inline %nan-p))
   (defun %nan-p (n)
-    (and (not (float-infinity-p n))
+    (and (not (infinity-p n))
          (ccl::nan-or-infinity-p n))))
 
 (defun nan-p (n)
