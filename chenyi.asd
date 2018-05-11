@@ -42,8 +42,15 @@
                 ((:file "gamma")
                  (:file "beta")))
                (:module "src/rng"
-                :components
-                (#-abcl (:file "dSFMT"))))
+                :components               
+                (#-abcl
+                 (:module "libdSFMT"
+                  :components     
+                  ((:file "lib")
+                   (:static-file "wrapper.c")
+                   (:file "wrapper")
+                   (:file "libdSFMT")))
+                 (:file "rand48"))))
   :description "A Math Library for Common Lisp"
   :long-description
   #.(with-open-file (stream (merge-pathnames

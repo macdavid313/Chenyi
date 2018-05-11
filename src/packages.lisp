@@ -32,13 +32,54 @@
   (:export #:gamma #:beta)
   (:documentation "This package contains various implementations for special mathematical functions, e.g. Gamma function, Beta funciton."))
 
+#-abcl
+(defpackage #:chenyi.rng.dsfmt
+  (:use #:cl)
+  (:nicknames #:cy.rng.dsfmt #:chenyi/rng/dsfmt #:cy/rng/dsfmt)
+  (:import-from #:cffi
+                #:*foreign-library-directories*
+                #:define-foreign-library
+                #:foreign-library-loaded-p
+                #:use-foreign-library
+                #:defcvar
+                #:defcfun)
+  (:import-from #:trivial-download #:download)
+  (:import-from #:trivial-extract #:extract-zip)
+  (:export #:+DSFMT-MEXP+ #:+DSFMT-N+ #:+DSFMT-N32+ #:+DSFMT-N64+
+           #:dsfmt-get-global-data
+           #:dsfmt-get-min-array-size
+           #:dsfmt-get-idstring
+           #:dsfmt-gen-rand-all
+           #:dsfmt-fill-array-close1-open2
+           #:dsfmt-fill-array-open-close
+           #:dsfmt-fill-array-close-open
+           #:dsfmt-fill-array-open-open
+           #:dsfmt-chk-init-gen-rand
+           #:dsfmt-chk-init-by-array
+           #:dsfmt-genrand-uint32
+           #:dsfmt-genrand-close1-open2
+           #:dsfmt-genrand-close-open
+           #:dsfmt-genrand-open-close
+           #:dsfmt-genrand-open-open
+           #:dsfmt-gv-genrand-uint32
+           #:dsfmt-gv-genrand-close1-open2
+           #:dsfmt-gv-genrand-close-open
+           #:dsfmt-gv-genrand-open-close
+           #:dsfmt-gv-genrand-open-open
+           #:dsfmt-gv-fill-array-open-close
+           #:dsfmt-gv-fill-array-close-open
+           #:dsfmt-gv-fill-array-open-open
+           #:dsfmt-gv-fill-array-close1-open2
+           #:dsfmt-gv-init-gen-rand
+           #:dsfmt-gv-init-by-array
+           #:dsfmt-init-gen-rand
+           #:dsfmt-init-by-array)
+  (:documentation "This package contains the binding of dSFMT."))
+
 (defpackage #:chenyi.rng
   (:use #:cl)
   (:nicknames #:cy.rng #:chenyi/rng #:cy/rng)
-  #-abcl (:import-from #:trivial-download #:download)
-  #-abcl (:import-from #:trivial-extract #:extract-zip)
-  #-abcl (:export #:prepare-dsfmt-src)
-  #-abcl (:documentation "This package contains various implementations for the Random Number Generator, including dSFMT.")
+  #-abcl (:documentation "This package contains various implementations for the Random Number Generator, including MersenneTwister by using dSFMT.")
   #+abcl (:documentation "This package contains various implementations for the Random Number Generator."))
 
 (defpackage #:chenyi
