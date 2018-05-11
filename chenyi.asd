@@ -44,12 +44,12 @@
                (:module "src/rng"
                 :components               
                 (#-abcl
-                 (:module "libdSFMT"
+                 (:module "dSFMT"
                   :components     
                   ((:file "lib")
                    (:static-file "wrapper.c")
                    (:file "wrapper")
-                   (:file "libdSFMT")))
+                   (:file "dSFMT")))
                  (:file "rand48"))))
   :description "A Math Library for Common Lisp"
   :long-description

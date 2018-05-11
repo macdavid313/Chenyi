@@ -6,7 +6,7 @@
 
   (defvar %dsfmt-zip-path%)
   
-  (defvar %dsfmt-src-path% (merge-pathnames "dSFMT/" %project-root-path%)
+  (defvar %dsfmt-src-path% (merge-pathnames "libdSFMT/" %project-root-path%)
     "The location where source code of dSFMT has been actually saved.")
   
   (defvar %project-libdsfmt-path%
@@ -98,8 +98,3 @@
     (t (:default "libdsfmt-wrap")))
   (unless (foreign-library-loaded-p 'libdsfmt-wrap)
     (use-foreign-library libdsfmt-wrap)))
-
-;; (eval-when (:compile-toplevel :load-toplevel)
-;;   (defcfun ("dsfmt_get_min_array_size" get-min-array-size) :int
-;;     "This function returns the minimum size of array used for 'fill-array' functions.")
-;;   ) ;; end of eval-when
