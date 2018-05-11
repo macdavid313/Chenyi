@@ -84,17 +84,17 @@
 
 (eval-when (:load-toplevel)
   (define-foreign-library libdsfmt
-    (:darwin (:or "libdsfmt.dylib"))
-    (:unix  (:or "libdsfmt.so"))
-    (:win32 "libdsfmt.dll")
-    (t (:default "libdsfmt")))
+    (:darwin (:or "libdSFMT.dylib"))
+    (:unix  (:or "libdSFMT.so"))
+    (:win32 "libdSFMT.dll")
+    (t (:default "libdSFMT")))
   (unless (foreign-library-loaded-p 'libdsfmt)
     (use-foreign-library libdsfmt))
   
   (define-foreign-library libdsfmt-wrap
-    (:darwin (:or "libdsfmt-wrap.dylib"))
-    (:unix  (:or "libdsfmt-wrap.so"))
-    (:win32 "libdsfmt-wrap.dll")
-    (t (:default "libdsfmt-wrap")))
+    (:darwin (:or "libdSFMT-wrap.dylib"))
+    (:unix  (:or "libdSFMT-wrap.so"))
+    (:win32 "libdSFMT-wrap.dll")
+    (t (:default "libdSFMT-wrap")))
   (unless (foreign-library-loaded-p 'libdsfmt-wrap)
     (use-foreign-library libdsfmt-wrap)))
