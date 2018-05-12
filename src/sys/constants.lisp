@@ -10,7 +10,7 @@
                +pi/2+ +pi/4+ +1/pi+ +2/pi+
                +ln2+ +ln10+ +ln-pi+
                inf64 -inf64 nan64 inf nan)
-         (inline infinity-p nan-p))
+         (inline infinity-p finity-p nan-p))
 
 (define-constant
     +e+ #.(exp 1d0) :test '=
@@ -113,18 +113,21 @@
       (single-float (or (= 1F++0 f) (= -1F++0 f)))
       (double-float (or (= 1D++0 f) (= -1F++0 f))))))
 
-(defun infinity-p (f)
+(defun infinity-p (x)
   (declare #+lispworks (inline %infinity-p)
            (optimize speed (safety 0) (space 0)))
-  (typecase f
+  (typecase x
     (float (and (funcall #+abcl 'system::float-infinity-p
                          #+allegro 'excl:infinityp
                          #+ccl 'ccl::infinity-p
                          #+(or cmucl ecl) 'ext:float-infinity-p
                          #+lispworks '%infinity-p
-                         #+sbcl 'sb-ext:float-infinity-p f)
+                         #+sbcl 'sb-ext:float-infinity-p x)
                 t))
     (t nil)))
+
+(defun finity-p (x)
+  (not (infinity-p x)))
 
 (defvar inf32
   #+(or abcl cmucl ecl) ext:single-float-positive-infinity
@@ -160,6 +163,8 @@
 
 (defvar inf inf64 "Positive infinity of type double-float.")
 
+(defvar -inf -inf64 "Negative infinity of type double-float.")
+
 (defmethod print-object ((o (eql inf32)) stream)
   (format stream "Inf32"))
 
@@ -182,38 +187,38 @@
     (and (not (infinity-p n))
          (ccl::nan-or-infinity-p n))))
 
-(defun nan-p (n)
+(defun nan-p (x)
   (declare #+ccl (inline %nan-p)
            (optimize speed (safety 0) (space 0)))
-  (typecase n
+  (typecase x
     (float (and (funcall #+abcl 'system:float-nan-p
                          #+allegro 'excl:nanp
                          #+ccl '%nan-p
                          #+(or cmucl ecl) 'ext:float-nan-p
                          #+lispworks 'system::nan-p
-                         #+sbcl 'sb-ext:float-nan-p n)
+                         #+sbcl 'sb-ext:float-nan-p x)
                 t))
     (t nil)))
 
+#-ecl
 (defvar nan32
-    #+abcl (system:make-single-float #x7fc00000)
-    #+allegro excl:*nan-single*
-    #+ccl (coerce ccl::double-float-nan 'single-float)
-    #+cmucl (kernel:make-single-float #x7fc00000)
-    #+ecl nil
-    #+lispworks system::*single-float-nan*
-    #+sbcl (sb-kernel::make-single-float #x7fc00000)
-    "The not-a-number value of type single-float.")
+  #+abcl (system:make-single-float #x7fc00000)
+  #+allegro excl:*nan-single*
+  #+ccl (coerce ccl::double-float-nan 'single-float)
+  #+cmucl (kernel:make-single-float #x7fc00000)
+  #+lispworks system::*single-float-nan*
+  #+sbcl (sb-kernel::make-single-float #x7fc00000)
+  "The not-a-number value of type single-float.")
 
 (defvar nan64
-    #+abcl (system:make-double-float #x7ff8000000000000)
-    #+allegro excl:*nan-double*
-    #+ccl ccl::double-float-nan
-    #+cmucl (kernel:make-double-float #x7ff80000 0)
-    #+ecl (ext:nan)
-    #+lispworks system::*double-float-nan*
-    #+sbcl (sb-kernel::make-double-float #x7ff80000 0)
-    "The not-a-number value of type double-float.")
+  #+abcl (system:make-double-float #x7ff8000000000000)
+  #+allegro excl:*nan-double*
+  #+ccl ccl::double-float-nan
+  #+cmucl (kernel:make-double-float #x7ff80000 0)
+  #+ecl (ext:nan)
+  #+lispworks system::*double-float-nan*
+  #+sbcl (sb-kernel::make-double-float #x7ff80000 0)
+  "The not-a-number value of type double-float.")
 
 (defvar nan nan64 "The not-a-number value of type double-float.")
 
