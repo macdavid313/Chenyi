@@ -8,6 +8,8 @@
   (:export
    ;;; Utilities
    #:ensure-double-float
+   ;;; Conditions
+   #:domain-error #:domain-error-expected
    ;;; Types
    #:negative-fixnum #:nonostive-fixnum #:non-negative-fixnum #:positive-fixnum
    #:negative-integer #:nonostive-integer #:non-negative-integer #:positive-integer
@@ -52,6 +54,7 @@
   (:nicknames #:cy.special #:chenyi/special #:cy/special)
   (:import-from #:chenyi.sys
                 #:+pi+
+                #:domain-error #:domain-error-expected
                 #:inf #:-inf #:inf64 #:-inf64 #:inf32 #:-inf32
                 #:nan #:nan64 #-ecl #:nan32
                 #:infinity-p #:finity-p #:nan-p)

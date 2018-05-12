@@ -29,7 +29,9 @@
                  (:file "chenyi")))
                (:module "src/sys"
                 :components
-                ((:file "utils")
+                ((:file "types")
+                 (:file "utils")
+                 (:file "conditions")
                  (:file "constants")
                  (:file "expm1")
                  (:file "log1p")
