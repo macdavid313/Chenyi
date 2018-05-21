@@ -43,12 +43,16 @@
 
 (defun factorial (n)
   "Compute the Factorial of n.
-Signal domain-error if n is not a non-negative integer."
+Signal a domain-error if n is not a non-negative integer."
   (declare (dynamic-extent n)
-           (optimize speed (safety 1) (space 0)))
+           (optimize speed (safety 0) (space 0)))
   (cond ((not (cy.sys:non-negative-integer-p n))
          (error 'domain-error :operation "Factorial"))
-        ((<= n 33) (gethash n %fact-table%))
+        ((<= n 33)
+         (multiple-value-bind (res res-existed-p)
+             (gethash n %fact-table%)
+           (declare (ignorable res-existed-p))
+           res))
         (t (loop for i from 34 to n
               with product = (gethash 33 %fact-table%)
               do (setf product (* product i))
@@ -79,7 +83,7 @@ Signal domain-error if x < 0; Return Inf if x equals to 0 or a floating-point-ov
                     (return-from gamma inf))))
     (cond ((zerop x) inf)
           (t (typecase x
-               (integer (factorial (+ x 1)))
+               (integer (factorial (- x 1)))
                (single-float (%gamma/f32 x))
                (double-float (%gamma/f64 x))
                (real (%gamma/f64 (coerce x 'double-float)))
@@ -188,7 +192,7 @@ Signal domain-error if x < 0; Return Inf if x equals to 0 or a floating-point-ov
                                      -6.2831853071795864769252842d0)
                                  (floor (+ 0.25d0 (* 0.5d0 x))))))
                   (log (sin (* +pi+ z)))
-                  (lgamma/complex-f64 (- 1d0 z)))))
+                  (%lgamma/complex-f64 (- 1d0 z)))))
           (;; abs(x - 1) + yabs < 0.1
            (< (+ (abs (- x 1d0)) yabs) 0.1d0)
            ;; taylor series around zero at z=1
