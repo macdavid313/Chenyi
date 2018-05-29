@@ -19,6 +19,7 @@
   :author "David Gu"
   :license ""
   :depends-on (#:alexandria
+               #:trivial-features
                #:cl-reexport
                #-abcl #:cffi
                #-abcl #:trivial-download
