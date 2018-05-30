@@ -14,6 +14,11 @@
   (:use #:cl #:asdf))
 (in-package #:chenyi-asd)
 
+#+abcl
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (require :abcl-contrib)
+  (require :jna))
+
 (defsystem #:chenyi
   :version "0.1"
   :author "David Gu"
@@ -21,9 +26,9 @@
   :depends-on (#:alexandria
                #:trivial-features
                #:cl-reexport
-               #-abcl #:cffi
-               #-abcl #:trivial-download
-               #-abcl #:trivial-extract)
+               #:cffi
+               #:trivial-download
+               #:trivial-extract)
   :components ((:module "src"
                 :components
                 ((:file "packages")
@@ -46,8 +51,7 @@
                  (:file "beta")))
                (:module "src/rng"
                 :components               
-                (#-abcl
-                 (:module "dSFMT"
+                ((:module "dSFMT"
                   :components     
                   ((:file "lib")
                    (:static-file "wrapper.c")

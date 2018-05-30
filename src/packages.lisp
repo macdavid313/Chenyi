@@ -62,7 +62,6 @@
   (:export #:gamma #:beta)
   (:documentation "This package contains various implementations for special mathematical functions, e.g. Gamma function, Beta funciton."))
 
-#-abcl
 (defpackage #:chenyi.rng.dsfmt
   (:use #:cl)
   (:nicknames #:cy.rng.dsfmt #:chenyi/rng/dsfmt #:cy/rng/dsfmt)
@@ -122,6 +121,4 @@
   (let ((type (lisp-implementation-type))
         (version (lisp-implementation-version)))
     #-(or abcl allegro ccl cmucl ecl lispworks sbcl)
-    (error "Your lisp ~a-~a may not be well supported yet." type version)
-    #+abcl
-    (warn "Your lisp ~a-~a doesn't support dSFMT yet." type version)))
+    (error "Your lisp ~a-~a may not be well supported yet." type version)))
