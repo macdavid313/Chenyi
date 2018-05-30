@@ -13,6 +13,8 @@ env:
     - LISP=ccl-bin
     - LISP=ecl
     - LISP=sbcl-bin
+    allow_failures:
+      - os: osx
     
 # addons:
 #   apt:
@@ -28,7 +30,7 @@ os:
 
 install:
   - curl -L https://raw.githubusercontent.com/roswell/roswell/master/scripts/install-for-ci.sh | sh
-  - if [ $TRAVIS_OS_NAME = linux ]; then sudo apt-get install maven; else brew install maven; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install maven; else brew upgrade maven; fi
 
 before_script:
   - ros --version
@@ -39,8 +41,16 @@ before_script:
             (terpri)
             (princ *features*)
             (terpri)'
-  - if [ $LISP = sbcl ]; then ros -e "(ql:quickload '(:alexandria :trivial-features :cl-reexport :cffi :trivial-download :trivial-extract))"; fi
+  - if [[ "$LISP" == "sbcl-bin" ]]; then ros -e "(ql:quickload '(:alexandria :trivial-features :cl-reexport :cffi :trivial-download :trivial-extract))"; fi
 
 script:
   - ros install prove
   - run-prove chenyi-test.asd
+
+notifications:
+  email:
+    # recipients:
+    #   - one@example.com
+    #   - other@example.com
+    on_success: always # default: change
+    on_failure: never # default: always
