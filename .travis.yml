@@ -14,13 +14,13 @@ env:
     - LISP=ecl
     - LISP=sbcl-bin
     
-addons:
-  apt:
-    packages:
-      # it is required for some reason
-      # to install allegrocl and cmucl
-      # - libc6-i386
-      - maven
+# addons:
+#   apt:
+#     packages:
+#       # it is required for some reason
+#       # to install allegrocl and cmucl
+#       # - libc6-i386
+#       - maven
 
 os:
   - osx
@@ -28,6 +28,7 @@ os:
 
 install:
   - curl -L https://raw.githubusercontent.com/roswell/roswell/master/scripts/install-for-ci.sh | sh
+  - if [ $TRAVIS_OS_NAME = linux ]; then sudo apt-get install maven; else brew install maven; fi
 
 before_script:
   - ros --version
@@ -38,7 +39,7 @@ before_script:
             (terpri)
             (princ *features*)
             (terpri)'
-  - ros -e "(ql:quickload '(:alexandria :trivial-features :cl-reexport :cffi :trivial-download :trivial-extract))"
+  - if [ $LISP = sbcl ]; then ros -e "(ql:quickload '(:alexandria :trivial-features :cl-reexport :cffi :trivial-download :trivial-extract))"; fi
 
 script:
   - ros install prove
