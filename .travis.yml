@@ -37,6 +37,8 @@ before_script:
             (terpri)
             (princ *features*)
             (terpri)'
+  - ros -e "(ql:quickload '(:alexandria :trivial-features :cl-reexport
+                            #-abcl :cffi #-abcl :trivial-download #-abcl #:trivial-extract))"
 
 script:
   - ros install prove
