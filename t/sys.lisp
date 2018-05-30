@@ -25,8 +25,7 @@
 
 (subtest "CONSTANTS"
   ;;; TYPE
-  (dolist (val #-ecl (list inf32 -inf32 nan32)
-               #+ecl (list inf32 -inf32))
+  (dolist (val (list inf32 -inf32 nan32))
     (is-type val 'single-float))
   (dolist (val (list +e+ +pi+ π +euler+ +eulergamma+ γ
                      +catalan+ +golden+ φ
@@ -59,9 +58,7 @@
       "(f64cmp= +ln-pi+ (log +pi+))")
   (dolist (val (list inf inf32 inf64 -inf32 -inf64))
     (ok (infinity-p val) (format nil "(infinity-p ~A)" val)))
-  #+ecl (is nan32 nil)
-  (dolist (val #-ecl (list nan32 nan64 nan)
-               #+ecl (list nan64 nan))
+  (dolist (val (list nan32 nan64 nan))
     (ok (nan-p val) (format nil "(nan-p ~A)" val))
     (ok (nan-p (+ val 1)) (format nil "(nan-p ~A)" val))
     (ok (nan-p (- val 2)) (format nil "(nan-p ~A)" val))

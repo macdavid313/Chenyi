@@ -40,7 +40,7 @@
    #:+ln2+ #:+ln10+ #:+ln-pi+
    ;;; Infinities and Not-a-number
    #:infinity-p #:finity-p #:inf32 #:inf64 #:-inf32 #:-inf64 #:inf #:-inf
-   #:nan-p #-ecl #:nan32 #:nan64 #:nan
+   #:nan-p #:nan32 #:nan64 #:nan
    ;;; Elementary functions
    #:log1p/f64 #:log1p #:expm1/f64 #:expm1 
    #+abcl #:frexp/f32 #:frexp/f64 #:ldexp/f64
@@ -56,7 +56,7 @@
                 #:+pi+
                 #:domain-error #:domain-error-expected
                 #:inf #:-inf #:inf64 #:-inf64 #:inf32 #:-inf32
-                #:nan #:nan64 #-ecl #:nan32
+                #:nan #:nan64 #:nan32
                 #:infinity-p #:finity-p #:nan-p)
   #-abcl (:import-from #:cffi #:foreign-funcall)
   (:export #:gamma #:beta)
