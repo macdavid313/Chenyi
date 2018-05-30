@@ -117,3 +117,11 @@
   (:nicknames #:cy)
   (:import-from #:cl-reexport #:reexport-from)
   (:documentation "The main package for Chenyi."))
+
+(eval-when (:load-toplevel)
+  (let ((type (lisp-implementation-type))
+        (version (lisp-implementation-version)))
+    #-(or abcl allegro ccl cmucl ecl lispworks sbcl)
+    (error "Your lisp ~a-~a may not be well supported yet." type version)
+    #+abcl
+    (warn "Your lisp ~a-~a doesn't support dSFMT yet." type version)))

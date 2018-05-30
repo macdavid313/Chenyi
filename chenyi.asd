@@ -68,13 +68,3 @@
           (setf (fill-pointer seq) (read-sequence seq stream))
           seq)))
   :in-order-to ((test-op (test-op chenyi-test))))
-
-(eval-when (:load-toplevel :execute)
-  (let ((type (lisp-implementation-type))
-        (version (lisp-implementation-version)))
-    #-(or abcl allegro ccl cmucl ecl lispworks sbcl)
-    (error "Your lisp ~a-~a may not be well supported yet." type version)
-    #+abcl
-    (warn "Your lisp ~a-~a doesn't support dSFMT yet." type version)
-    #+ecl
-    (warn "Your lisp ~a-~a doesn't support NaN of type single-float yet." type version)))
