@@ -58,7 +58,7 @@
                 #:inf #:-inf #:inf64 #:-inf64 #:inf32 #:-inf32
                 #:nan #:nan64 #:nan32
                 #:infinity-p #:finity-p #:nan-p)
-  #-abcl (:import-from #:cffi #:foreign-funcall)
+  (:import-from #:cffi #:foreign-funcall)
   (:export #:gamma #:beta)
   (:documentation "This package contains various implementations for special mathematical functions, e.g. Gamma function, Beta funciton."))
 
@@ -108,8 +108,7 @@
 (defpackage #:chenyi.rng
   (:use #:cl)
   (:nicknames #:cy.rng #:chenyi/rng #:cy/rng)
-  #-abcl (:documentation "This package contains various implementations for the Random Number Generator, including MersenneTwister by using dSFMT.")
-  #+abcl (:documentation "This package contains various implementations for the Random Number Generator."))
+  (:documentation "This package contains various implementations for the Random Number Generator, including MersenneTwister by using dSFMT."))
 
 (defpackage #:chenyi
   (:use #:cl)
