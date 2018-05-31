@@ -82,10 +82,6 @@
       "(f64cmp= (log1p 0.5d0) (log 1.5d0))")
   (ok (- (expm1 0.2345d0) (- (exp 0.2345d0) 1d0))
       "(f64cmp= (expm1 0.2345d0) (- (exp 0.2345d0) 1d0))")
-  #+abcl
-  (ok (multiple-value-bind (x exp) (frexp/f32 10.0)
-        (and (= x 0.625) (= exp 4)))
-      "(frexp/f32 10.0)")
   (ok (multiple-value-bind (x exp) (frexp 10d0)
         (and (= x 0.625d0) (= exp 4)))
       "(frexp 10d0)")
