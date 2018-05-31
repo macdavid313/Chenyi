@@ -3,7 +3,7 @@
 
 (declaim (inline log1p))
 
-(defun log1p/f64 (x)
+(defun %log1p/f64 (x)
   (declare (type double-float x)
            (dynamic-extent x)
            (optimize speed (safety 0) (space 0)))
@@ -17,7 +17,11 @@
 
 (defun log1p (x)
   "This function computes the value of log(1+x) in a way that is accurate for small x."
-  (declare (type number x))
-  (cond ((typep x 'real)
-         (ensure-double-float (x) (log1p/f64 x)))
-        (t (log (+ x 1)))))
+  (typecase x
+    (number (ensure-double-float (x)
+              (%log1p/f64 x)))
+    (t (error 'domain-error :operation "log1p"))))
+
+(define-compiler-macro log1p (&whole form &environment env x)
+  (cond ((constantp x env) (log1p x))
+        (t form)))
