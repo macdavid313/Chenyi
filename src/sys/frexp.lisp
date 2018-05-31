@@ -1,38 +1,42 @@
 ;;;; frexp.lisp
 (in-package #:chenyi.sys)
 
-(declaim (inline frexp/64)
-         #+abcl (inline frexp/f32))
+(declaim (inline frexp))
 
-#+abcl
-(defun frexp/f32 (x)
-  (declare (type single-float x))
-  (let* (($math (java:jclass "java.lang.Math"))
-         ($float (java:jclass "float"))
-         ($method (java:jmethod $math "getExponent" $float))
-         exponent)
-    (declare (dynamic-extent $math $float $method exponent))
-    (setq exponent (+ 1 (java:jcall $method $math x)))
-    (values (/ x (expt 2 exponent)) exponent)))
+#+windows
+(defun %frexp/f64 (x)
+  (declare (type double-float x)
+           (dynamic-extent x)
+           (optimize speed (safety 0) (space 0)))
+  (let ((mantissa 0d0) (exp 0))
+    (declare (type double-float mantissa)
+             (type fixnum exp)
+             (dynamic-extent mantissa exp))
+    (unless (zerop x)
+      (setq exp (+ 1 (floor (log (abs x) 2d0)))))
+    (setq mantissa (* x (expt 2d0 (- exp))))
+    (values mantissa exp)))
 
-#+abcl
-(defun frexp/f64 (x)
-  "This function splits the number x into its normalized fraction f and exponent e,
-such that x = f * 2^e and 0.5 <= f < 1. It calls the static function java.lang.Math.getExponent, therefore, as shown in the signature, x could be either single-float or double-float."
-  (declare (type float x))
-  (let* (($math (java:jclass "java.lang.Math"))
-         ($double (java:jclass "double"))
-         ($method (java:jmethod $math "getExponent" $double))
-         exponent)
-    (declare (dynamic-extent $math $double $method exponent))
-    (setq exponent (+ 1 (java:jcall $method $math x)))
-    (values (/ x (expt 2 exponent)) exponent)))
-
-#-abcl
-(defun frexp/f64 (x)
+#+(and cffi (not windows))
+(defun %frexp/f64 (x)
   "This function splits the number x into its normalized fraction f and exponent e,
 such that x = f * 2^e and 0.5 <= f < 1. It uses the C function from math.h"
   (declare (type double-float x))
   (cffi:with-foreign-object (exponent :int)
     (values (cffi:foreign-funcall "frexp" :double x :pointer exponent :double)
             (cffi:mem-ref exponent :int))))
+
+(defun frexp (x)
+  (declare (dynamic-extent x))
+  (typecase x
+    (double-float (%frexp/f64 x))
+    (real (%frexp/f64 (coerce x 'double-float)))
+    (t (error 'domain-error :operation "frexp"))))
+
+(define-compiler-macro frexp (&whole form &environment env x)
+  (cond ((constantp x env)
+         (typecase x
+           (double-float `(%frexp/f64 ,x))
+           (real `(%frexp/f64 ,(coerce x 'double-float)))
+           (t (error 'domain-error :operation "frexp"))))
+        (t form)))

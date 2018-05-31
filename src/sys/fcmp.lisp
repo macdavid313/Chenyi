@@ -23,11 +23,11 @@
              (dynamic-extent max exponent delta difference))
     ;; Find exponent of largest absolute value
     (setq max (max (abs x1) (abs x2)))
-    (multiple-value-bind (x exp) (frexp/f64 max)
+    (multiple-value-bind (x exp) (frexp max)
       (declare (ignore x))
       (setq exponent exp))
     ;; Form a neighborhood of size  2 * delta
-    (setq delta (ldexp/f64 epsilon exponent))
+    (setq delta (ldexp epsilon exponent))
     (setq difference (- x1 x2))
     (cond ((> difference delta) 1)
           ((< difference (- delta)) -1)

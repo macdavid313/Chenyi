@@ -22,12 +22,13 @@
 
 (defun expm1 (x)
   "This function computes the value of exp(x) - 1 in a way that is accurate for small x."
+  (declare (dynamic-extent x)
+           (optimize speed (safety 0) (space 0)))
   (typecase x
-    (number (ensure-double-float (x)
-              (typecase x
-                (real (%expm1/f64 x))
-                (t (- (exp x) 1)))))
-    (t (error 'domain-error :operation "expm1"))))
+    (double-float (%expm1/f64 x))
+    (real (%expm1/f64 (coerce x 'double-float)))
+    (complex (- (exp x) 1))
+    (t (error 'domain-error :operation "expm1" :expect "Number"))))
 
 (define-compiler-macro expm1 (&whole form &environment env x)
   (cond ((constantp x env) (expm1 x))

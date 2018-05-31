@@ -17,10 +17,12 @@
 
 (defun log1p (x)
   "This function computes the value of log(1+x) in a way that is accurate for small x."
-  (typecase x
-    (number (ensure-double-float (x)
-              (%log1p/f64 x)))
-    (t (error 'domain-error :operation "log1p"))))
+  (cond ((= x -1) -Inf)
+        (t (typecase x
+             (double-float (%log1p/f64 x))
+             (real (%log1p/f64 (coerce x 'double-float)))
+             (complex (log (+ x 1)))
+             (t (error 'domain-error :operation "log1p" :expect "Number"))))))
 
 (define-compiler-macro log1p (&whole form &environment env x)
   (cond ((constantp x env) (log1p x))

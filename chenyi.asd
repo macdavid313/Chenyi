@@ -41,7 +41,7 @@
                  (:file "constants")
                  (:file "expm1")
                  (:file "log1p")
-                 (:file "frexp")
+                 #+abcl (:file "frexp-abcl") #-abcl (:file "frexp")
                  (:file "ldexp")
                  (:file "hypot")
                  (:file "fcmp")))
