@@ -3,7 +3,7 @@
 
 (declaim (inline expm1))
 
-(defun expm1/f64 (x)
+(defun %expm1/f64 (x)
   (declare (type double-float x)
            (dynamic-extent x)
            (optimize speed (safety 0) (space 0)))
@@ -22,7 +22,13 @@
 
 (defun expm1 (x)
   "This function computes the value of exp(x) - 1 in a way that is accurate for small x."
-  (declare (type number x))
-  (cond ((typep x 'real)
-         (ensure-double-float (x) (expm1/f64 x)))
-        (t (- (exp x) 1))))
+  (typecase x
+    (number (ensure-double-float (x)
+              (typecase x
+                (real (%expm1/f64 x))
+                (t (- (exp x) 1)))))
+    (t (error 'domain-error :operation "expm1"))))
+
+(define-compiler-macro expm1 (&whole form &environment env x)
+  (cond ((constantp x env) (expm1 x))
+        (t form)))
