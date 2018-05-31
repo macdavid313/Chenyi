@@ -47,7 +47,7 @@ script:
   - ros install prove
   - run-prove chenyi-test.asd
 
-# notifications:
-#   email:
-#     on_success: always # default: change
-#     on_failure: never # default: always
+notifications:
+  email:
+    on_success: always # default: change
+    on_failure: never # default: always
