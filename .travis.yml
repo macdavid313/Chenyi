@@ -17,8 +17,8 @@ env:
     - LISP=ccl-bin
     - LISP=ecl
     - LISP=sbcl-bin
-    allow_failures:
-      - os: osx
+    # allow_failures:
+    #   - os: osx
     
 # addons:
 #   apt:
