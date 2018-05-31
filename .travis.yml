@@ -1,6 +1,10 @@
 language: common-lisp
 sudo: true
 
+os:
+  - osx
+  - linux
+
 env:
   global:
     - PATH=~/.roswell/bin:$PATH
@@ -24,13 +28,9 @@ env:
 #       # - libc6-i386
 #       - maven
 
-os:
-  - osx
-  - linux
-
 install:
   - curl -L https://raw.githubusercontent.com/roswell/roswell/master/scripts/install-for-ci.sh | sh
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install maven; else brew upgrade maven; fi
+  - if [[ $TRAVIS_OS_NAME == "linux" ]]; then sudo apt-get install maven; else brew upgrade maven; fi
 
 before_script:
   - ros --version
@@ -41,7 +41,7 @@ before_script:
             (terpri)
             (princ *features*)
             (terpri)'
-  - if [[ "$LISP" == "sbcl-bin" ]]; then ros -e "(ql:quickload '(:alexandria :trivial-features :cl-reexport :cffi :trivial-download :trivial-extract))"; fi
+  - if [[ $LISP == "sbcl-bin" ]]; then ros -e "(ql:quickload '(:alexandria :trivial-features :cl-reexport :cffi :trivial-download :trivial-extract))"; fi
 
 script:
   - ros install prove
