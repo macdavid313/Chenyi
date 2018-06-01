@@ -45,7 +45,7 @@
    #:log1p #:expm1 #:frexp #:ldexp
    #:*f64cmp-epsilon* #:f64cmp
    #:f64cmp< #:f64cmp<= #:f64cmp= #:f64cmp> #:f64cmp>=
-   #:hypot/f64 #:hypot #:hypot3/f64 #:hypot3)
+   #:hypot #:hypot3)
   (:documentation "This package contains basic definitions, including constants, elementary functions and utilities."))
 
 (defpackage #:chenyi.special
