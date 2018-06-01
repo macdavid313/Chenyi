@@ -5,15 +5,16 @@
 ;;; Ted.Belding@umich.edu
 (in-package #:chenyi.sys)
 
-(declaim (inline fcmp)
-         (type double-float *fcmp-epsilon*))
+(declaim (inline fcmp %f64cmp-check-type)
+         (type double-float *fcmp-epsilon*)
+         (ftype (function (double-float double-float real) (integer -1 1)) f64cmp))
 
 (defun f64cmp (x1 x2 epsilon)
-  "This function determines whether x1 and x2 (must both be double-float) are approximately equal to a relative accuracy epsilon."
+  "This function determines whether x1 and x2 (must both be double-float) are approximately equal to a relative accuracy epsilon. It returns 1 if x1 > x2, -1 if x1 < x2 or 0 that if x1 \"equals\" to x2."
   (declare (type double-float x1 x2)
            (type real epsilon)
            (dynamic-extent x1 x2 epsilon)
-           (optimize speed (safety 0) (space 0)))
+           (optimize speed (safety 1) (space 0)))
   (let ((max 0d0)
         (exponent 0)
         (delta 0d0)
@@ -35,79 +36,106 @@
 
 (defvar *f64cmp-epsilon* double-float-epsilon "The default epsilon used by fcmp.")
 
+(defun %f64cmp-check-type (name lst)
+  (declare (type simple-string name)
+           (type cons lst)
+           (optimize speed (safety 0) (space 0)))
+  (unless (every (lambda (x) (typep x 'double-float)) lst)
+    (error 'domain-error :operation name :expect "double-float")))
+
 (defun f64cmp< (number &rest more-numbers)
   "Return t if multiple double-floats are in monotonically increasing order, otherwise return nil. Note that it returns t if there is only one value."
+  (declare (optimize speed))
   (flet ((cmp (x y epsilon)
            (= -1 (f64cmp x y epsilon))))
-    (if (null more-numbers)
-        t
-        (loop for lst = (cons number more-numbers) then (cdr lst)
-           while (cdr lst) do
-             (let ((x (first lst))
-                   (y (second lst)))
-               (declare (type double-float x y))
-               (unless (cmp x y *f64cmp-epsilon*)
-                 (return-from f64cmp< nil)))
-           finally (return t)))))
-
+    (let ((numbers (cons number more-numbers)))
+      (declare (dynamic-extent numbers))
+      (%f64cmp-check-type "f64cmp<" numbers)    
+      (if (null more-numbers)
+          t
+          (loop for lst = numbers then (cdr lst)
+             while (cdr lst) do
+               (let ((x (first lst))
+                     (y (second lst)))
+                 (declare (type double-float x y))
+                 (unless (cmp x y *f64cmp-epsilon*)
+                   (return-from f64cmp< nil)))
+             finally (return t))))))
+  
 (defun f64cmp<= (number &rest more-numbers)
   "Return t if multiple double-floats are in monotonically nondecreasing order, otherwise return nil. Note that it returns t if there is only one value."
+  (declare (optimize speed))
   (flet ((cmp (x y epsilon)
            (let ((res (f64cmp x y epsilon)))
              (or (= res -1) (zerop res)))))
-    (if (null more-numbers)
-        t
-        (loop for lst = (cons number more-numbers) then (cdr lst)
-           while (cdr lst) do
-             (let ((x (first lst))
-                   (y (second lst)))
-               (declare (type double-float x y))
-               (unless (cmp x y *f64cmp-epsilon*)
-                 (return-from f64cmp<= nil)))
-           finally (return t)))))
+    (let ((numbers (cons number more-numbers)))
+      (declare (dynamic-extent numbers))
+      (%f64cmp-check-type "f64cmp<=" numbers)
+      (if (null more-numbers)
+          t
+          (loop for lst = numbers then (cdr lst)
+             while (cdr lst) do
+               (let ((x (first lst))
+                     (y (second lst)))
+                 (declare (type double-float x y))
+                 (unless (cmp x y *f64cmp-epsilon*)
+                   (return-from f64cmp<= nil)))
+             finally (return t))))))
 
 (defun f64cmp= (number &rest more-numbers)
   "Return t if multiple double-floats are approximately the same in value, otherwise return nil. Note that it returns t if there is only one value."
+  (declare (optimize speed))
   (flet ((cmp (x y epsilon)
            (zerop (f64cmp x y epsilon))))
-    (if (null more-numbers)
-        t
-        (loop for lst = (cons number more-numbers) then (cdr lst)
-           while (cdr lst) do
-             (let ((x (first lst))
-                   (y (second lst)))
-               (declare (type double-float x y))
-               (unless (cmp x y *f64cmp-epsilon*)
-                 (return-from f64cmp= nil)))
-           finally (return t)))))
+    (let ((numbers (cons number more-numbers)))
+      (declare (dynamic-extent numbers))
+      (%f64cmp-check-type "f64cmp=" numbers)
+      (if (null more-numbers)
+          t
+          (loop for lst = numbers then (cdr lst)
+             while (cdr lst) do
+               (let ((x (first lst))
+                     (y (second lst)))
+                 (declare (type double-float x y))
+                 (unless (cmp x y *f64cmp-epsilon*)
+                   (return-from f64cmp= nil)))
+             finally (return t))))))
 
 (defun f64cmp> (number &rest more-numbers)
-  "Return t if multiple double-floats are in monotonically decreasing order, otherwise return nil. Note that it returns t if there is only one value."  
+  "Return t if multiple double-floats are in monotonically decreasing order, otherwise return nil. Note that it returns t if there is only one value."
+  (declare (optimize speed))
   (flet ((cmp (x y epsilon)
            (= 1 (f64cmp x y epsilon))))
-    (if (null more-numbers)
-        t
-        (loop for lst = (cons number more-numbers) then (cdr lst)
-           while (cdr lst) do
-             (let ((x (first lst))
-                   (y (second lst)))
-               (declare (type double-float x y))
-               (unless (cmp x y *f64cmp-epsilon*)
-                 (return-from f64cmp> nil)))
-           finally (return t)))))
+    (let ((numbers (cons number more-numbers)))
+      (declare (dynamic-extent numbers))
+      (%f64cmp-check-type "f64cmp>" numbers)
+      (if (null more-numbers)
+          t
+          (loop for lst = numbers then (cdr lst)
+             while (cdr lst) do
+               (let ((x (first lst))
+                     (y (second lst)))
+                 (declare (type double-float x y))
+                 (unless (cmp x y *f64cmp-epsilon*)
+                   (return-from f64cmp> nil)))
+             finally (return t))))))
 
 (defun f64cmp>= (number &rest more-numbers)
-  "Return t if multiple double-floats are in monotonically nonincreasing order, otherwise return nil. Note that it returns t if there is only one value."    
+  "Return t if multiple double-floats are in monotonically nonincreasing order, otherwise return nil. Note that it returns t if there is only one value."
+  (declare (optimize speed))
   (flet ((cmp (x y epsilon)
            (let ((res (f64cmp x y epsilon)))
              (or (= res 1) (zerop res)))))
-    (if (null more-numbers)
-        t
-        (loop for lst = (cons number more-numbers) then (cdr lst)
-           while (cdr lst) do
-             (let ((x (first lst))
-                   (y (second lst)))
-               (declare (type double-float x y))
-               (unless (cmp x y *f64cmp-epsilon*)
-                 (return-from f64cmp>= nil)))
-           finally (return t)))))
+    (let ((numbers (cons number more-numbers)))
+      (declare (dynamic-extent numbers))
+      (%f64cmp-check-type "f64cmp>=" numbers)
+      (if (null more-numbers)
+          t
+          (loop for lst = numbers then (cdr lst)
+             while (cdr lst) do
+               (let ((x (first lst))
+                     (y (second lst)))
+                 (declare (type double-float x y))
+                 (unless (cmp x y *f64cmp-epsilon*)
+                   (return-from f64cmp>= nil)))
+             finally (return t))))))

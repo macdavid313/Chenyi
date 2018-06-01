@@ -16,12 +16,12 @@
 (defun %ldexp/f64 (x exponent)
   (declare (type double-float x)
            (type fixnum exponent)
-           (dynamic-extent x exponent))
+           (optimize speed (safety 0) (space 0)))
   (cffi:foreign-funcall "ldexp" :double x :int exponent :double))
 
 (defun ldexp (x exponent)
   "This function computes the value of x * 2 ^ exponent."
-  (unless (typep exponent 'integer)
+  (unless (typep exponent 'fixnum)
     (error 'domain-error :operation "ldexp"))
   (if (zerop x)
       0d0
