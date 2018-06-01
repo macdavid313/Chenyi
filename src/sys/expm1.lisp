@@ -29,5 +29,6 @@
     (t (error 'domain-error :operation "expm1" :expect "Number"))))
 
 (define-compiler-macro expm1 (&whole form &environment env x)
-  (cond ((constantp x env) (expm1 x))
+  (cond ((and (constantp x env) (numberp x))
+         (expm1 x))
         (t form)))

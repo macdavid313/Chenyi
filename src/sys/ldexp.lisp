@@ -34,6 +34,7 @@
           (if (plusp x) inf -inf)))))
   
 (define-compiler-macro ldexp (&whole form &environment env x exponent)
-  (cond ((and (constantp x env) (constantp exponent))
+  (cond ((and (constantp x env) (constantp exponent)
+              (realp x) (typep exponent 'fixnum))
          (ldexp x exponent))
         (t form)))

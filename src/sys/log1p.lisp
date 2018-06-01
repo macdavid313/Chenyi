@@ -25,5 +25,6 @@
              (t (error 'domain-error :operation "log1p" :expect "Number"))))))
 
 (define-compiler-macro log1p (&whole form &environment env x)
-  (cond ((constantp x env) (log1p x))
+  (cond ((and (constantp x env) (numberp x))
+         (log1p x))
         (t form)))

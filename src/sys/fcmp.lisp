@@ -41,7 +41,7 @@
            (type cons lst)
            (optimize speed (safety 0) (space 0)))
   (unless (every (lambda (x) (typep x 'double-float)) lst)
-    (error 'domain-error :operation name :expect "double-float")))
+    (error 'domain-error :operation name :expect "Double-Float")))
 
 (defun f64cmp< (number &rest more-numbers)
   "Return t if multiple double-floats are in monotonically increasing order, otherwise return nil. Note that it returns t if there is only one value."
