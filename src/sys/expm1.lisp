@@ -5,7 +5,6 @@
 
 (defun %expm1/f64 (x)
   (declare (type double-float x)
-           (dynamic-extent x)
            (optimize speed (safety 0) (space 0)))
   (if (< (abs x) +ln2+)
       ;; Compute the taylor series S = x + (1/2!) x^2 + (1/3!) x^3 + ...
@@ -22,8 +21,7 @@
 
 (defun expm1 (x)
   "This function computes the value of exp(x) - 1 in a way that is accurate for small x."
-  (declare (dynamic-extent x)
-           (optimize speed (safety 0) (space 0)))
+  (declare (optimize speed (safety 0) (space 0)))
   (typecase x
     (double-float (%expm1/f64 x))
     (real (%expm1/f64 (coerce x 'double-float)))

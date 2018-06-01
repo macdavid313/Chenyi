@@ -5,8 +5,7 @@
 
 (defun %frexp/f32 (x)
   (declare (type single-float x)
-           (dynamic-extent x)
-           (optimize speed (safety 0) (space 0)))
+           (optimize speed (safety 1) (space 0)))
   (let* (($math (java:jclass "java.lang.Math"))
          ($float (java:jclass "float"))
          ($method (java:jmethod $math "getExponent" $float))
@@ -17,8 +16,7 @@
 
 (defun %frexp/f64 (x)
   (declare (type double-float x)
-           (dynamic-extent x)
-           (optimize speed (safety 0) (space 0)))
+           (optimize speed (safety 1) (space 0)))
   (let* (($math (java:jclass "java.lang.Math"))
          ($double (java:jclass "double"))
          ($method (java:jmethod $math "getExponent" $double))
@@ -29,7 +27,7 @@
 
 (defun frexp (x)
   "This function splits the number x into its normalized fraction f and exponent e, such that x = f * 2^e and 0.5 <= f < 1."
-  (declare (dynamic-extent x))
+  (declare (optimize speed (safety 0) (space 0)))
   (typecase x
     (single-float (%frexp/f32 x))
     (double-float (%frexp/f64 x))

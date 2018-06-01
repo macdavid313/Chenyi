@@ -6,7 +6,6 @@
 #+windows
 (defun %frexp/f64 (x)
   (declare (type double-float x)
-           (dynamic-extent x)
            (optimize speed (safety 0) (space 0)))
   (let ((mantissa 0d0) (exp 0))
     (declare (type double-float mantissa)
@@ -21,13 +20,14 @@
 (defun %frexp/f64 (x)
   "This function splits the number x into its normalized fraction f and exponent e,
 such that x = f * 2^e and 0.5 <= f < 1. It uses the C function from math.h"
-  (declare (type double-float x))
+  (declare (type double-float x)
+           (optimize speed (safety 0) (space 0)))
   (cffi:with-foreign-object (exponent :int)
     (values (cffi:foreign-funcall "frexp" :double x :pointer exponent :double)
             (cffi:mem-ref exponent :int))))
 
 (defun frexp (x)
-  (declare (dynamic-extent x))
+  (declare (optimize speed (safety 0) (space 0)))
   (typecase x
     (double-float (%frexp/f64 x))
     (real (%frexp/f64 (coerce x 'double-float)))

@@ -5,7 +5,6 @@
 
 (defun %log1p/f64 (x)
   (declare (type double-float x)
-           (dynamic-extent x)
            (optimize speed (safety 0) (space 0)))
   (let ((y 0d0) (z 0d0))
     (declare (type double-float y z)
@@ -17,6 +16,7 @@
 
 (defun log1p (x)
   "This function computes the value of log(1+x) in a way that is accurate for small x."
+  (declare (optimize speed (safety 0) (space 0)))
   (cond ((= x -1) -Inf)
         (t (typecase x
              (double-float (%log1p/f64 x))
