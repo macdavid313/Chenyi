@@ -3,8 +3,8 @@
 
 (declaim (type single-float inf32 -inf32 #+linux nan32)
          (type double-float
-               +e+ +pi+ π +euler+ +eulergamma+ γ
-               +catalan+ +golden+ φ
+               +e+ +pi+ +euler+ +eulergamma+
+               +catalan+ +golden+
                +log2e+ +log10e+
                +sqrt-1/2+ +sqrt-2+ +sqrt-3+ +sqrt-pi+
                +pi/2+ +pi/4+ +1/pi+ +2/pi+
@@ -21,10 +21,6 @@
     :documentation "The constant pi.")
 
 (define-constant
-    π 3.14159265358979323846d0 :test '=
-    :documentation "The constant pi.")
-
-(define-constant
     +euler+ 0.57721566490153286061d0 :test '=
     :documentation "Euler's constant.")
 
@@ -33,19 +29,11 @@
     :documentation "Euler's constant.")
 
 (define-constant
-    γ 0.57721566490153286061d0 :test '=
-    :documentation "Euler's constant.")
-
-(define-constant
     +catalan+ 0.91596559417721901505d0 :test '=
     :documentation "Catalan's constant.")
 
 (define-constant
     +golden+ 1.61803398874989484820d0 :test '=
-    :documentation "The golden ratio.")
-
-(define-constant
-    φ 1.61803398874989484820d0 :test '=
     :documentation "The golden ratio.")
 
 ;;; some constants from GSL library

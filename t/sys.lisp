@@ -40,8 +40,8 @@
   ;;; TYPE
   (dolist (val (list inf32 -inf32 #+linux nan32))
     (is-type val 'single-float))
-  (dolist (val (list +e+ +pi+ π +euler+ +eulergamma+ γ
-                     +catalan+ +golden+ φ
+  (dolist (val (list +e+ +pi+ +euler+ +eulergamma+
+                     +catalan+ +golden+
                      +log2e+ +log10e+
                      +sqrt-1/2+ +sqrt-2+ +sqrt-3+ +sqrt-pi+
                      +pi/2+ +pi/4+ +1/pi+ +2/pi+
@@ -49,13 +49,13 @@
     (is-type val 'double-float))
   ;;; EQUALITY
   (is +e+ (exp 1d0) :test 'fcmp=)
-  (ok (= +pi+ π 3.14159265358979323846d0)
-      "(= +pi+ π 3.14159265358979323846d0)")
-  (ok (= +euler+ +eulergamma+ γ 0.57721566490153286061d0)
-      "(= +euler+ +eulergamma+ γ 0.57721566490153286061d0)")
+  (ok (= +pi+ 3.14159265358979323846d0)
+      "(= +pi+ 3.14159265358979323846d0)")
+  (ok (= +euler+ +eulergamma+ 0.57721566490153286061d0)
+      "(= +euler+ +eulergamma+ 0.57721566490153286061d0)")
   (is +catalan+ 0.91596559417721901505d0 :test '=)
-  (ok (= +golden+ φ 1.61803398874989484820d0)
-      "(= +golden+ φ 1.61803398874989484820d0)")
+  (ok (= +golden+ 1.61803398874989484820d0)
+      "(= +golden+ 1.61803398874989484820d0)")
   (is +log2e+ (log (exp 1d0) 2d0) :test '=)
   (is +log10e+ (log (exp 1d0) 10d0) :test '=)
   (is +sqrt-1/2+ (sqrt 0.5d0) :test '=)

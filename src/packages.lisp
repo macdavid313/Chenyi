@@ -32,8 +32,8 @@
    #:negative-double-float-p #:non-postive-double-float-p #:non-negative-double-float-p #:positive-double-float-p
    #:negative-long-float-p #:non-postive-long-float-p #:non-negative-long-float-p #:positive-long-float-p
    ;;; Constants
-   #:+e+ #:+pi+ #:π #:+euler+ #:+eulergamma+ #:γ
-   #:+catalan+ #:+golden+ #:φ
+   #:+e+ #:+pi+ #:+euler+ #:+eulergamma+
+   #:+catalan+ #:+golden+
    #:+log2e+ #:+log10e+
    #:+sqrt-1/2+ #:+sqrt-2+ #:+sqrt-3+ #:+sqrt-pi+
    #:+pi/2+ #:+pi/4+ #:+1/pi+ #:+2/pi+
