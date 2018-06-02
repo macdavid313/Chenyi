@@ -5,6 +5,9 @@
   (:import-from #:cy.sys #:while))
 (in-package #:chenyi-test)
 
+#+(allegro lispworks)
+(setf *enable-colors* nil)
+
 (defun test-rel (got expected relative-error &optional description)
   (let (status)
     (cond ((or (or (nan-p got) (nan-p expected))
