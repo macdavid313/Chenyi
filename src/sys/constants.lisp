@@ -117,12 +117,12 @@
   (declare #+lispworks (inline %infinity-p)
            (optimize speed (safety 0) (space 0)))
   (typecase x
-    (float (and (funcall #+abcl 'system::float-infinity-p
-                         #+allegro 'excl:infinityp
-                         #+ccl 'ccl::infinity-p
-                         #+(or cmucl ecl) 'ext:float-infinity-p
-                         #+lispworks '%infinity-p
-                         #+sbcl 'sb-ext:float-infinity-p x)
+    (float (and (funcall #+abcl #'system::float-infinity-p
+                         #+allegro #'excl:infinityp
+                         #+ccl #'ccl::infinity-p
+                         #+(or cmucl ecl) #'ext:float-infinity-p
+                         #+lispworks #'%infinity-p
+                         #+sbcl #'sb-ext:float-infinity-p x)
                 t))
     (t nil)))
 
@@ -180,6 +180,9 @@
 (defmethod print-object ((o (eql inf)) stream)
   (format stream "Inf"))
 
+(defmethod print-object ((o (eql -inf)) stream)
+  (format stream "-Inf"))
+
 #+ccl
 (progn
   (declaim (inline %nan-p))
@@ -191,12 +194,12 @@
   (declare #+ccl (inline %nan-p)
            (optimize speed (safety 0) (space 0)))
   (typecase x
-    (float (and (funcall #+abcl 'system:float-nan-p
-                         #+allegro 'excl:nanp
-                         #+ccl '%nan-p
-                         #+(or cmucl ecl) 'ext:float-nan-p
-                         #+lispworks 'system::nan-p
-                         #+sbcl 'sb-ext:float-nan-p x)
+    (float (and (funcall #+abcl #'system:float-nan-p
+                         #+allegro #'excl:nanp
+                         #+ccl #'%nan-p
+                         #+(or cmucl ecl) #'ext:float-nan-p
+                         #+lispworks #'system::nan-p
+                         #+sbcl #'sb-ext:float-nan-p x)
                 t))
     (t nil)))
 
