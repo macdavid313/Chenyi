@@ -25,10 +25,10 @@
   :license ""
   :depends-on (#:alexandria
                #:trivial-features
-               #:cl-reexport
-               #:cffi
-               #:trivial-download
-               #:trivial-extract)
+               #:cl-reexport)
+               ;; #:cffi
+               ;; #:trivial-download
+               ;; #:trivial-extract)
   :components ((:module "src"
                 :components
                 ((:file "packages")
@@ -36,28 +36,28 @@
                (:module "src/sys"
                 :components
                 ((:file "types")
-                 (:file "utils")
+                 (:file "utils")                 
                  (:file "conditions")
+                 (:file "gsl")
                  (:file "constants")
                  (:file "expm1")
                  (:file "log1p")
-                 #+abcl (:file "frexp-abcl") #-abcl (:file "frexp")
-                 (:file "ldexp")
+                 (:file "ldfrexp")
                  (:file "hypot")
-                 (:file "fcmp")))
-               (:module "src/special"
-                :components
-                ((:file "gamma")
-                 (:file "beta")))
-               (:module "src/rng"
-                :components               
-                ((:module "dSFMT"
-                  :components     
-                  ((:file "lib")
-                   (:static-file "wrapper.c")
-                   (:file "wrapper")
-                   (:file "dSFMT")))
-                 (:file "rand48"))))
+                 (:file "fcmp"))))
+               ;; (:module "src/special"
+               ;;  :components
+               ;;  ((:file "gamma")
+               ;;   (:file "beta"))))
+               ;; (:module "src/rng"
+               ;;  :components               
+               ;;  ((:module "dSFMT"
+               ;;    :components     
+               ;;    ((:file "lib")
+               ;;     (:static-file "wrapper.c")
+               ;;     (:file "wrapper")
+               ;;     (:file "dSFMT")))
+               ;;   (:file "rand48"))))
   :description "A Math Library for Common Lisp"
   :long-description
   #.(with-open-file (stream (merge-pathnames

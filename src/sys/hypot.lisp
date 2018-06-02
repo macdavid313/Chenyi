@@ -1,11 +1,10 @@
 ;;;; hypot.lisp
 (in-package #:chenyi.sys)
 
-(declaim (inline hypot hypot3))
+(declaim (inline %hypot/f64 hypot %hypot3/f64 hypot3))
 
 (defun %hypot/f64 (x y)
   (declare (type double-float x y)
-           (dynamic-extent x y)
            (optimize speed (safety 0) (space 0)))
   (let ((xabs 0d0) (yabs 0d0)
         (min 0d0) (max 0d0)
@@ -30,14 +29,17 @@
 
 (defun hypot (x y)
   "It computes the value of sqrt(x^2 + y^2) in a way that avoids overflow (when x and y are real numbers)."
-  (declare (optimize speed))
-  (cond ((and (typep x 'real) (typep y 'real))
-         (ensure-double-float (x y)
-           (declare (type double-float x y))
-           (%hypot/f64 x y)))
-        ((and (typep x 'number) (typep y 'number))
-         (sqrt (+ (* x x) (* y y))))
-        (t (error 'domain-error :operation "hypot" :expect "Number"))))
+  (unless (and (numberp x) (numberp y))
+    (error 'domain-error :operation "hypot" :expect "Number"))
+  (handler-case 
+      (cond ((and (typep x 'double-float) (typep y 'double-float))
+             (%hypot/f64 x y))
+            ((and (realp x) (realp y))
+             (%hypot/f64 (float x 0d0) (float y 0d0)))
+            (t (sqrt (+ (* x x) (* y y)))))
+    (floating-point-overflow (c)
+      (declare (ignore c))
+      inf)))
 
 (define-compiler-macro hypot (&whole form &environment env x y)
   (cond ((and (constantp x env) (constantp y env)
@@ -47,12 +49,14 @@
 
 (defun %hypot3/f64 (x y z)
   (declare (type double-float x y z)
-           (dynamic-extent x y z)
            (optimize speed (safety 0) (space 0)))
-  (let ((xabs (abs x)) (yabs (abs y))
-        (zabs (abs z)) (w 0d0))
+  (let ((xabs 0d0) (yabs 0d0)
+        (zabs 0d0) (w 0d0))
     (declare (type double-float xabs yabs zabs w)
-             (dynamic-extent w))
+             (dynamic-extent xabs yabs zabs w))
+    (setq xabs (abs x)
+          yabs (abs y)
+          zabs (abs z))
     (setq w (max xabs yabs zabs))
     (if (zerop w)
         0d0
@@ -62,14 +66,18 @@
 
 (defun hypot3 (x y z)
   "It computes the value of sqrt(x^2 + y^2 + z^2) in a way that avoids overflow (when x and y are real numbers)."
-  (declare (optimize speed))
-  (cond ((and (typep x 'real) (typep y 'real) (typep z 'real))
-         (ensure-double-float (x y z)
-           (%hypot3/f64 x y z)))
-        ((and (typep x 'number) (typep y 'number) (typep z 'number))
-         (sqrt (+ (* x x) (* y y) (* z z))))
-        (t (error 'domain-error :operation "hypot3" :expect "Number"))))
-
+  (unless (and (numberp x) (numberp y) (numberp z))
+    (error 'domain-error :operation "hypot3" :expect "Number"))
+  (handler-case
+      (cond ((and (typep x 'double-float) (typep y 'double-float) (typep z 'double-float))
+             (%hypot3/f64 x y z))
+            ((and (realp x) (realp y) (realp z))
+             (%hypot3/f64 (float x 0d0) (float y 0d0) (float z 0d0)))
+            (t (sqrt (+ (* x x) (* y y) (* z z)))))
+    (floating-point-overflow (c)
+      (declare (ignore c))
+      inf)))
+  
 (define-compiler-macro hypot3 (&whole form &environment env x y z)
   (cond ((and (constantp x env) (constantp y env) (constantp z env)
               (numberp x) (numberp y) (numberp z))

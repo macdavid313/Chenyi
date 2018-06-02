@@ -1,7 +1,8 @@
 ;;;; chenyi.lisp
 (in-package #:cl-user)
 (defpackage #:chenyi-test
-  (:use #:cl #:chenyi #:prove))
+  (:use #:cl #:chenyi #:prove)
+  (:import-from #:cy.sys #:while))
 (in-package #:chenyi-test)
 
 (defun test-rel (got expected relative-error &optional description)
