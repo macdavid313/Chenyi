@@ -9,7 +9,7 @@
 (define-constant +GSL-ROOT4-DBL-EPSILON+  1.2207031250000000d-04 :test '=)
 (define-constant +GSL-ROOT5-DBL-EPSILON+  7.4009597974140505d-04 :test '=)
 (define-constant +GSL-ROOT6-DBL-EPSILON+  2.4607833005759251d-03 :test '=)
-(define-constant +GSL-LOG-DBL-EPSILON+   -3.6043653389117154d01 :test '=)
+(define-constant +GSL-LOG-DBL-EPSILON+   -3.6043653389117154d01  :test '=)
 
 (define-constant +GSL-DBL-MIN+        2.2250738585072014d-308 :test '=)
 (define-constant +GSL-SQRT-DBL-MIN+   1.4916681462400413d-154 :test '=)
@@ -17,15 +17,15 @@
 (define-constant +GSL-ROOT4-DBL-MIN+  1.2213386697554620d-77 :test '=)
 (define-constant +GSL-ROOT5-DBL-MIN+  2.9476022969691763d-62 :test '=)
 (define-constant +GSL-ROOT6-DBL-MIN+  5.3034368905798218d-52 :test '=)
-(define-constant +GSL-LOG-DBL-MIN+   -7.0839641853226408d02 :test '=)
+(define-constant +GSL-LOG-DBL-MIN+   -7.0839641853226408d02  :test '=)
 
 (define-constant +GSL-DBL-MAX+        1.7976931348623157d308 :test '=)
 (define-constant +GSL-SQRT-DBL-MAX+   1.3407807929942596d154 :test '=)
 (define-constant +GSL-ROOT3-DBL-MAX+  5.6438030941222897d102 :test '=)
-(define-constant +GSL-ROOT4-DBL-MAX+  1.1579208923731620d77 :test '=)
-(define-constant +GSL-ROOT5-DBL-MAX+  4.4765466227572707d61 :test '=)
-(define-constant +GSL-ROOT6-DBL-MAX+  2.3756689782295612d51 :test '=)
-(define-constant +GSL-LOG-DBL-MAX+    7.0978271289338397d02 :test '=)
+(define-constant +GSL-ROOT4-DBL-MAX+  1.1579208923731620d77  :test '=)
+(define-constant +GSL-ROOT5-DBL-MAX+  4.4765466227572707d61  :test '=)
+(define-constant +GSL-ROOT6-DBL-MAX+  2.3756689782295612d51  :test '=)
+(define-constant +GSL-LOG-DBL-MAX+    7.0978271289338397d02  :test '=)
 
 (define-constant +GSL-FLT-EPSILON+        1.1920928955078125d-07 :test '=)
 (define-constant +GSL-SQRT-FLT-EPSILON+   3.4526698300124393d-04 :test '=)
@@ -33,7 +33,7 @@
 (define-constant +GSL-ROOT4-FLT-EPSILON+  1.8581361171917516d-02 :test '=)
 (define-constant +GSL-ROOT5-FLT-EPSILON+  4.1234622211652937d-02 :test '=)
 (define-constant +GSL-ROOT6-FLT-EPSILON+  7.0153878019335827d-02 :test '=)
-(define-constant +GSL-LOG-FLT-EPSILON+   -1.5942385152878742d01 :test '=)
+(define-constant +GSL-LOG-FLT-EPSILON+   -1.5942385152878742d01  :test '=)
 
 (define-constant +GSL-FLT-MIN+        1.1754943508222875d-38 :test '=)
 (define-constant +GSL-SQRT-FLT-MIN+   1.0842021724855044d-19 :test '=)
@@ -41,7 +41,7 @@
 (define-constant +GSL-ROOT4-FLT-MIN+  3.2927225399135965d-10 :test '=)
 (define-constant +GSL-ROOT5-FLT-MIN+  2.5944428542140822d-08 :test '=)
 (define-constant +GSL-ROOT6-FLT-MIN+  4.7683715820312542d-07 :test '=)
-(define-constant +GSL-LOG-FLT-MIN+   -8.7336544750553102d01 ::test '=)
+(define-constant +GSL-LOG-FLT-MIN+   -8.7336544750553102d01  :test '=)
 
 (define-constant +GSL-FLT-MAX+        3.4028234663852886d38 :test '=)
 (define-constant +GSL-SQRT-FLT-MAX+   1.8446743523953730d19 :test '=)
@@ -57,4 +57,4 @@
 (define-constant +GSL-ROOT4-SFLT-EPSILON+  1.4865088937534013d-01 :test '=)
 (define-constant +GSL-ROOT5-SFLT-EPSILON+  2.1763764082403100d-01 :test '=)
 (define-constant +GSL-ROOT6-SFLT-EPSILON+  2.8061551207734325d-01 :test '=)
-(define-constant +GSL-LOG-SFLT-EPSILON+   -7.6246189861593985d00 :test '=)
+(define-constant +GSL-LOG-SFLT-EPSILON+   -7.6246189861593985d00  :test '=)
