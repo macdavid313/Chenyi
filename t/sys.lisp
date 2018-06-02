@@ -104,9 +104,9 @@
         (data `((,+pi+ -2 ,+pi/4+)
                 (1d0 2 4.000000d0)
                 (0d0 2 0d0)
-                (0.9999999999999999d0 1024 ,most-positive-double-float)
+                (9.999999999999998890d-01 1024 ,cy.sys::+GSL-DBL-MAX+)
                 (1d308 -2000 8.7098098162172166755761d-295)
-                (,least-positive-double-float 2000 5.67251933470834d278))))
+                (,cy.sys::+GSL-DBL-MIN+ 2000 2.554675596204441378334779940d294))))
     (loop for (x exponent expected) in data
        do (test-rel (ldexp x exponent) expected re
                     (format nil "(ldexp ~a ~a)" x exponent))))
@@ -129,10 +129,10 @@
                 (,(- (/ 1d0 4d0)
                      (* 4d0 cy.sys::+GSL-DBL-EPSILON+))
                   0.999999999999996447d0 -2)
-                (,most-positive-double-float 9.999999999999998890d-1 1024)
-                (,most-negative-double-float -9.999999999999998890d-1 1024)
-                (,least-positive-double-float 0.5d0 -1073)
-                (,least-negative-double-float -0.5d0 -1073))))
+                (,cy.sys::+GSL-DBL-MAX+ 9.999999999999998890d-1 1024)
+                (,(- cy.sys::+GSL-DBL-MAX+) -9.999999999999998890d-1 1024)
+                (,cy.sys::+GSL-DBL-MIN+ 0.5d0 -1021)
+                (,(- cy.sys::+GSL-DBL-MIN+) -0.5d0 -1021))))
     (loop for (arg expected-x expected-exponent) in data
        do (multiple-value-bind (x exponent) (frexp arg)
             (test-rel x expected-x re (format nil "(frexp ~a) fraction" arg))
