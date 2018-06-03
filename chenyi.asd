@@ -43,6 +43,7 @@
                  (:file "expm1")
                  (:file "log1p")
                  (:file "ldfrexp")
+                 (:file "invhyp")
                  (:file "hypot")
                  (:file "fcmp"))))
                ;; (:module "src/special"

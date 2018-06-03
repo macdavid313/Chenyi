@@ -66,6 +66,6 @@
   `(let ,(mapcar (lambda (var)
                    `(,var (etypecase ,var
                             (double-float ,var)
-                            (real (coerce ,var 'double-float)))))
+                            (real (float ,var 0d0)))))
                  vars)
      ,@body))

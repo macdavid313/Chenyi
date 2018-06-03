@@ -5,6 +5,7 @@
   (:use #:cl)
   (:nicknames #:cy.sys #:chenyi/sys #:cy/sys)
   (:import-from #:alexandria #:define-constant)
+  (:shadow #:acosh #:asinh #:atanh)
   (:export
    ;;; Utilities
    #:ensure-double-float #:if* #:while
@@ -45,6 +46,7 @@
    #:log1p #:expm1 #:frexp #:ldexp
    #:*fcmp-epsilon* #:fcmp
    #:fcmp< #:fcmp<= #:fcmp= #:fcmp> #:fcmp>=
+   #:acosh #:asinh #:atanh
    #:hypot #:hypot3)
   (:documentation "This package contains basic definitions, including constants, elementary functions and utilities."))
 
@@ -113,6 +115,7 @@
   (:use #:cl)
   (:nicknames #:cy)
   (:import-from #:cl-reexport #:reexport-from)
+  (:shadowing-import-from #:cy.sys #:acosh #:asinh #:atanh)
   (:documentation "The main package for Chenyi."))
 
 (eval-when (:load-toplevel)

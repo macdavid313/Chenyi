@@ -20,6 +20,23 @@
         ((= x 1d0) 0)
         (t nan)))
 
+(defun acosh (x)
+  "This function computes the hyperbolic arc cosine of x. It provides an alternative to the standard math function cl:acosh when x is not a Complex number."
+  (unless (numberp x)
+    (error 'domain-error :operation "acosh" :expect "Number"))
+  (typecase x
+    (double-float (%acosh/f64 x))
+    (real (%acosh/f64 (float x 0d0)))
+    (t (let ((r (realpart x))
+             (i (imagpart x)))
+         (ensure-double-float (r i)
+           (cl:acosh (complex r i)))))))
+
+(define-compiler-macro acosh (&whole form &environment env x)
+  (cond ((and (constantp x env) (numberp x))
+         (acosh x))
+        (t form)))
+
 (defun %asinh/f64 (x)
   (declare (type double-float x)
            (optimize speed (space 0) (safety 0)))
@@ -42,6 +59,23 @@
              (* s (log1p (+ a (/ a2 (+ 1 (sqrt (+ a2 1)))))))))
           (t x))))
 
+(defun asinh (x)
+  "This function computes the hyperbolic arc sine of x. It provides an alternative to the standard math function cl:asinh when x is not a Complex number."
+  (unless (numberp x)
+    (error 'domain-error :operation "asinh" :expect "Number"))
+  (typecase x
+    (double-float (%asinh/f64 x))
+    (real (%asinh/f64 (float x 0d0)))
+    (t (let ((r (realpart x))
+             (i (imagpart x)))
+         (ensure-double-float (r i)
+           (cl:asinh (complex r i)))))))
+
+(define-compiler-macro asinh (&whole form &environment env x)
+  (cond ((and (constantp x env) (numberp x))
+         (asinh x))
+        (t form)))
+
 (defun %atanh/f64 (x)
   (declare (type double-float x)
            (optimize speed (space 0) (safety 0)))
@@ -62,3 +96,20 @@
                                 (/ (* 2d0 a a)
                                    (- 1d0 a))))))
           (t x))))
+
+(defun atanh (x)
+  "This function computes the hyperbolic arc tangent of x. It provides an alternative to the standard math function cl:atanh when x is not a Complex number."
+  (unless (numberp x)
+    (error 'domain-error :operation "atanh" :expect "Number"))
+  (typecase x
+    (double-float (%atanh/f64 x))
+    (real (%atanh/f64 (float x 0d0)))
+    (t (let ((r (realpart x))
+             (i (imagpart x)))
+         (ensure-double-float (r i)
+           (cl:atanh (complex r i)))))))
+
+(define-compiler-macro atanh (&whole form &environment env x)
+  (cond ((and (constantp x env) (numberp x))
+         (atanh x))
+        (t form)))

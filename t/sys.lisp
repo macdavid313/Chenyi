@@ -147,5 +147,33 @@
         (test-rel y y-expected re (format nil "(frexp ~a) fraction" x))
         (ok (= e e-expected) (format nil "(frexp ~a) exponent" x))
         (setq x (/ x 2d0))))))
+
+(subtest "invhyp"
+  (let ((re 1d-15))
+    ;; tests for acosh
+    (test-rel (acosh 1d0) 0d0 re "(acosh 1d0)")
+    (test-rel (acosh 1.1d0) 4.435682543851151891329110663525d-1 re "(acosh 1.1d0)")
+    (test-rel (acosh 10d0) 2.9932228461263808979126677137742d0 re "(acosh 10d0)")
+    (test-rel (acosh 1d10) 2.3718998110500402149594646668302d1 re "(acosh 1d10)")
+    ;; tests for asinh
+    (test-rel (asinh 0d0) 0d0 re "(asinh 0d0)")
+    (test-rel (asinh 1d-10) 9.9999999999999999999833333333346d-11 re "(asinh 1d-10)")
+    (test-rel (asinh -1d-10) -9.9999999999999999999833333333346d-11 re "(asinh -1d-10)")
+    (test-rel (asinh 0.1d0) 9.983407889920756332730312470477d-2 re "(asinh 0.1d0)")
+    (test-rel (asinh -0.1d0) -9.983407889920756332730312470477d-2 re "(asinh -0.1d0)")
+    (test-rel (asinh 1d0)  8.8137358701954302523260932497979d-1 re "(asinh 1d0)")
+    (test-rel (asinh -1d0)  -8.8137358701954302523260932497979d-1 re "(asinh -1d0)")
+    (test-rel (asinh 10d0) 2.9982229502979697388465955375965d0 re "(asinh 10d0)")
+    (test-rel (asinh -10d0) -2.9982229502979697388465955375965d0 re "(asinh -10d0)")
+    (test-rel (asinh 1d10) 2.3718998110500402149599646668302d1 re "(asinh 1d10)")
+    (test-rel (asinh -1d10) -2.3718998110500402149599646668302d1 re "(asinh -1d10)")
+    ;; tests for atanh
+    (test-rel (atanh 0d0) 0d0 re "(atanh 0d0)")
+    (test-rel (atanh 1d-20) 1d-20 re "(atanh 1d-20)")
+    (test-rel (atanh -1d-20) -1d-20 re "(atanh -1d-20)")
+    (test-rel (atanh 0.1d0) 1.0033534773107558063572655206004d-1 re "(atanh 0.1d0)")
+    (test-rel (atanh -0.1d0) -1.0033534773107558063572655206004d-1 re "(atanh -0.1d0)")
+    (test-rel (atanh 0.9d0) 1.4722194895832202300045137159439d0 re "(atanh 0.9d0)")
+    (test-rel (atanh -0.9d0) -1.4722194895832202300045137159439d0 re "(atanh -0.9d0)")))
   
 (finalize)

@@ -2,6 +2,7 @@
 (in-package #:cl-user)
 (defpackage #:chenyi-test
   (:use #:cl #:chenyi #:prove)
+  (:shadowing-import-from #:chenyi #:acosh #:asinh #:atanh)
   (:import-from #:cy.sys #:while))
 (in-package #:chenyi-test)
 
