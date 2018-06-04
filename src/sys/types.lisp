@@ -1,6 +1,12 @@
 ;;;; types.lisp
 (in-package #:chenyi.sys)
 
+;;; Synonyms
+(deftype float32 () 'single-float)
+(deftype float64 () 'double-float)
+(deftype complex/f32 () '(complex single-float))
+(deftype complex/f64 () '(complex double-float))
+
 ;;; Sub-interval Numerical Types for Common Lisp
 ;;; https://common-lisp.net/project/cdr/document/5/extra-num-types.html
 #|

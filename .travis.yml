@@ -38,6 +38,7 @@ install:
   # - if [[ $TRAVIS_OS_NAME == "linux" ]]; then sudo apt-get install maven; else brew upgrade maven; fi
 
 before_script:
+  - git clone https://github.com/macdavid313/cl-parametric-types.git macdavid313/cl-parametric-types
   - ros --version
   - ros config
   - ros -e '(princ (lisp-implementation-type))
@@ -46,7 +47,7 @@ before_script:
             (terpri)
             (princ *features*)
             (terpri)'
-  - if [[ $LISP == "sbcl-bin" ]]; then ros -e "(ql:quickload '(:alexandria :trivial-features :cl-reexport))"; fi
+  - if [[ $LISP == "sbcl-bin" ]]; then ros -e "(ql:quickload '(:alexandria :trivial-features :cl-parametric-types :cl-reexport))"; fi
 
 script:
   - ros install prove

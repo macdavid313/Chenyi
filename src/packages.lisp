@@ -5,13 +5,16 @@
   (:use #:cl)
   (:nicknames #:cy.sys #:chenyi/sys #:cy/sys)
   (:import-from #:alexandria #:define-constant)
+  (:import-from #:cl-parametric-types #:template)
   (:shadow #:acosh #:asinh #:atanh)
   (:export
    ;;; Utilities
-   #:ensure-double-float #:if* #:while
+   #:if* #:while #:ensure-double-float #:eps
+   #:constant-form-value
    ;;; Conditions
    #:domain-error #:domain-error-expected
    ;;; Types
+   #:float32 #:float64 #:complex/f32 #:complex/f64
    #:negative-fixnum #:nonostive-fixnum #:non-negative-fixnum #:positive-fixnum
    #:negative-integer #:nonostive-integer #:non-negative-integer #:positive-integer
    #:negative-rational #:nonostive-rational #:non-negative-rational #:positive-rational

@@ -24,7 +24,8 @@
   :author "David Gu"
   :license ""
   :depends-on (#:alexandria
-               #:trivial-features
+               #:trivial-features               
+               #:cl-parametric-types
                #:cl-reexport)
                ;; #:cffi
                ;; #:trivial-download
