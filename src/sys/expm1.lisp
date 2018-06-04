@@ -1,7 +1,24 @@
 ;;;; expm1.lisp
 (in-package #:chenyi.sys)
 
-(declaim (inline %expm1/f64 expm1))
+(declaim (inline %expm1/f64 %expm1/f32 expm1)
+         (ftype (function (double-float) double-float) %expm1/f64))
+
+(defun %expm1/f32 (x)
+  (declare (type single-float x)
+           (optimize speed (safety 0) (space 0)))
+  (cond ((< (abs x) #.(log 2f0))
+         ;; Compute the taylor series S = x + (1/2!) x^2 + (1/3!) x^3 + ...
+         (let ((i 1f0)
+               (term (/ x 1f0))
+               (sum x))
+           (declare (type single-float i term sum))
+           (do ()
+               ((<= (abs term) (* (abs sum) single-float-epsilon)) sum)
+             (setq i (+ 1f0 i))
+             (setq term (* term (/ x i)))
+             (setq sum (+ sum term)))))
+        (t (- (exp x) 1f0))))
 
 (defun %expm1/f64 (x)
   (declare (type double-float x)
@@ -24,9 +41,11 @@
   (unless (numberp x)
     (error 'domain-error :operation "expm1" :expect "Number"))
   (handler-case (typecase x
+                  (single-float (%expm1/f32 x))
                   (double-float (%expm1/f64 x))
                   (real (%expm1/f64 (float x 0d0)))
-                  (complex (- (exp x) 1)))
+                  (complex (ensure-consistent-complex-float (x)
+                             (- (the (complex float) (exp x)) 1))))
     (floating-point-overflow (c)
       (declare (ignore c))
       inf)))
