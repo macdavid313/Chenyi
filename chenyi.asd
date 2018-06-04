@@ -14,10 +14,10 @@
   (:use #:cl #:asdf))
 (in-package #:chenyi-asd)
 
-#+abcl
-(eval-when (:compile-toplevel :load-toplevel :execute)
-  (require :abcl-contrib)
-  (require :jna))
+;; #+abcl
+;; (eval-when (:compile-toplevel :load-toplevel :execute)
+;;   (require :abcl-contrib)
+;;   (require :jna))
 
 (defsystem #:chenyi
   :version "0.1"
