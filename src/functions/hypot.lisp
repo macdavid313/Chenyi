@@ -1,0 +1,121 @@
+;;;; hypot.lisp
+(in-package #:chenyi)
+
+#+(and cffi (or darwin linux))
+(defun hypot (x y)
+  (let ((lst (list x y)))
+    (declare (dynamic-extent lst))
+    (handler-case
+        (cond ((every 'float32-p lst) (cffi:foreign-funcall "hypotf" :float x :float y :float))
+              ((every 'float64-p lst) (cffi:foreign-funcall "hypot" :double x :double y :double))
+              ((every 'rationalp lst) (cffi:foreign-funcall
+                                       "hypot" :double (float x 0d0) :double (float y 0d0) :double))
+              ((every 'numberp lst) (sqrt (+ (* x x) (* y y))))
+              (t (error 'domain-error :operation "hypot" :expect "Number")))
+      (floating-point-overflow (c)
+        (declare (ignore c))
+        inf))))
+
+#-(and cffi (or darwin linux))
+(progn
+  (defun %hypot/float (x y)
+    (declare (type float x y)
+             (optimize speed (safety 1) (space 0)))
+    (let ((xabs (abs x)) (yabs (abs y))
+          (min (float 0 x)) (max (float 0 x))
+          (u (float 0 x)))
+      (declare (type float xabs yabs min max u)
+               (dynamic-extent xabs yabs min max u))
+      (cond ((or (infinity-p x) (infinity-p y))
+             (inf x))
+            (t (setq xabs (abs x))
+               (setq yabs (abs y))
+               (if (< xabs yabs)
+                   (setq min xabs
+                         max yabs)
+                   (setq min yabs
+                         max xabs))
+               (if (zerop min)
+                   max
+                   (progn
+                     (setq u (/ min max))
+                     (* max (sqrt (+ 1 (* u u))))))))))
+
+  (defun hypot (x y)
+    "It computes the value of sqrt(x^2 + y^2) in a way that avoids overflow (when x and y are real numbers)."
+    (let ((lst (list x y)))
+      (declare (dynamic-extent lst))
+      (handler-case
+          (cond ((every 'floatp lst) (%hypot/float x y))
+                ((every 'realp lst) (%hypot/float (float x 0d0) (float y 0d0)))
+                ((every 'numberp lst) (sqrt (+ (* x x) (* y y))))
+                (t (error 'domain-error :operation "hypot" :expect "Number")))
+      (floating-point-overflow (c)
+        (declare (ignore c))
+        inf))))
+  ) ;; end of progn
+
+(define-compiler-macro hypot (&whole form &environment env x y)
+  (cond ((and (constantp x env) (constantp y env))        
+         (hypot (constant-form-value x env)
+                (constant-form-value y env)))
+        (t form)))
+
+(defun %hypot3/f32 (x y z)
+  (declare (type float32 x y z)
+           (optimize speed (safety 1) (space 0)))
+  (let ((xabs 0f0) (yabs 0f0)
+        (zabs 0f0) (w 0f0))
+    (declare (type float32 xabs yabs zabs w)
+             (dynamic-extent xabs yabs zabs w))
+    (setq xabs (abs x)
+          yabs (abs y)
+          zabs (abs z))
+    (setq w (max xabs yabs zabs))
+    (if (zerop w)
+        0f0
+        (* w (sqrt (+ (* (/ xabs w) (/ xabs w))
+                      (* (/ yabs w) (/ yabs w))
+                      (* (/ zabs w) (/ zabs w))))))))
+
+(defun %hypot3/f64 (x y z)
+  (declare (type float64 x y z)
+           (optimize speed (safety 1) (space 0)))
+  (let ((xabs 0d0) (yabs 0d0)
+        (zabs 0d0) (w 0d0))
+    (declare (type float64 xabs yabs zabs w)
+             (dynamic-extent xabs yabs zabs w))
+    (setq xabs (abs x)
+          yabs (abs y)
+          zabs (abs z))
+    (setq w (max xabs yabs zabs))
+    (if (zerop w)
+        0d0
+        (* w (sqrt (+ (* (/ xabs w) (/ xabs w))
+                      (* (/ yabs w) (/ yabs w))
+                      (* (/ zabs w) (/ zabs w))))))))
+
+(defun hypot3 (x y z)
+  "It computes the value of sqrt(x^2 + y^2 + z^2) in a way that avoids overflow (when x and y are real numbers)."
+  (let ((lst (list x y z)))
+    (declare (dynamic-extent lst))
+    (handler-case
+        (cond ((every 'float32-p lst) (%hypot3/f32 x y z))
+              ((every 'float64-p lst) (%hypot3/f64 x y z))
+              ((every 'rationalp lst) (let ((x (float x 0d0))
+                                            (y (float y 0d0))
+                                            (z (float z 0d0)))
+                                        (%hypot3/f64 x y z)))
+              ((every 'numberp lst)
+               (sqrt (+ (* x x) (* y y) (* z z))))
+              (t (error 'domain-error :operation "hypot3" :expect "Number")))
+      (floating-point-overflow (c)
+        (declare (ignore c))
+        inf))))
+  
+(define-compiler-macro hypot3 (&whole form &environment env x y z)
+  (cond ((and (constantp x env) (constantp y env) (constantp z env))
+         (hypot3 (constant-form-value x env)
+                 (constant-form-value y env)
+                 (constant-form-value z env)))
+        (t form)))

@@ -3,7 +3,7 @@
 ;;; Based on fcmp 1.2.2 Copyright (c) 1998-2000 Theodore C. Belding
 ;;; University of Michigan Center for the Study of Complex Systems
 ;;; Ted.Belding@umich.edu
-(in-package #:chenyi.sys)
+(in-package #:chenyi)
 
 (declaim (inline %fcmp-check-type)
          (type double-float *fcmp-epsilon*)

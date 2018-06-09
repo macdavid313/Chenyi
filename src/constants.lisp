@@ -1,15 +1,12 @@
 ;;;; constants.lisp
-(in-package #:chenyi.sys)
+(in-package #:chenyi)
 
-(declaim (type single-float inf32 -inf32 #+linux nan32)
-         (type double-float
-               +e+ +pi+ +euler+ +eulergamma+
-               +catalan+ +golden+
-               +log2e+ +log10e+
+(declaim (type float32 inf32 -inf32 #+linux nan32)
+         (type float64 +e+ +pi+ +euler+ +eulergamma+
+               +catalan+ +golden+ +log2e+ +log10e+
                +sqrt-1/2+ +sqrt-2+ +sqrt-3+ +sqrt-pi+
-               +pi/2+ +pi/4+ +1/pi+ +2/pi+
-               +ln2+ +ln10+ +ln-pi+
-               inf64 -inf64 nan64 inf nan)
+               +pi/2+ +pi/4+ +1/pi+ +2/pi+ +ln2+ +ln10+
+               +ln-pi+ inf64 -inf64 nan64 inf nan)
          (inline infinity-p finity-p nan-p))
 
 (define-constant
@@ -36,8 +33,6 @@
     +golden+ 1.61803398874989484820d0 :test '=
     :documentation "The golden ratio.")
 
-;;; some constants from GSL library
-;;; https://www.gnu.org/software/gsl/doc/html/math.html#mathematical-constants
 (define-constant
     +log2e+ #.(log (exp 1d0) 2d0) :test '=
     :documentation "The base-2 logarithm of e.")
@@ -96,7 +91,7 @@
   (declaim (inline %infinity-p))
   (defun %infinity-p (f)
     ;; FIXME!
-    ;; this doesn't look right ...
+    ;; this doesn't look right ... should probably improve this
     (etypecase f
       (single-float (or (= 1F++0 f) (= -1F++0 f)))
       (double-float (or (= 1D++0 f) (= -1F++0 f))))))
@@ -117,41 +112,43 @@
 (defun finity-p (x)
   (not (infinity-p x)))
 
-(defvar inf32
+(define-constant inf32
   #+(or abcl cmucl ecl) ext:single-float-positive-infinity
   #+allegro excl:*infinity-single*
   #+ccl (coerce ccl::double-float-positive-infinity 'single-float)
   #+lispworks +1F++0
   #+sbcl sb-kernel::single-float-positive-infinity
-  "Positive infinity of type single-float.")
+  :test 'eql :documentation "Positive infinity of type single-float.")
 
-(defvar -inf32
+(define-constant -inf32
   #+(or abcl cmucl ecl) ext:single-float-negative-infinity
   #+allegro excl:*negative-infinity-single*
   #+ccl (coerce ccl::double-float-negative-infinity 'single-float)
   #+lispworks -1F++0
   #+sbcl sb-kernel::single-float-negative-infinity
-  "Negative infinity of type single-float.")
+  :test 'eql :documentation "Negative infinity of type single-float.")
 
-(defvar inf64
+(define-constant inf64
   #+(or abcl cmucl ecl) ext:double-float-positive-infinity
   #+allegro excl:*infinity-double*
   #+ccl ccl::double-float-positive-infinity
   #+lispworks +1D++0
   #+sbcl sb-kernel::double-float-positive-infinity
-  "Positive infinity of type double-float.")
+  :test 'eql :documentation "Positive infinity of type double-float.")
 
-(defvar -inf64
+(define-constant -inf64
   #+(or abcl cmucl ecl) ext:double-float-negative-infinity
   #+allegro excl:*negative-infinity-double*
   #+ccl ccl::double-float-negative-infinity
   #+lispworks -1D++0
   #+sbcl sb-kernel::double-float-negative-infinity
-  "Negative infinity of type double-float.")
+  :test 'eql :documentation "Negative infinity of type double-float.")
 
-(defvar inf inf64 "Positive infinity of type double-float.")
+(define-constant inf inf64
+  :test 'eql :documentation "Positive infinity of type double-float.")
 
-(defvar -inf -inf64 "Negative infinity of type double-float.")
+(define-constant -inf -inf64
+  :test 'eql :documentation "Negative infinity of type double-float.")
 
 (defmethod print-object ((o (eql inf32)) stream)
   (format stream "Inf32"))

@@ -35,7 +35,7 @@ addons:
 
 install:
   - curl -L https://raw.githubusercontent.com/roswell/roswell/master/scripts/install-for-ci.sh | sh
-  # - if [[ $TRAVIS_OS_NAME == "linux" ]]; then sudo apt-get install maven; else brew upgrade maven; fi
+  - if [[ $TRAVIS_OS_NAME == "linux" ]]; then sudo apt-get install maven; else brew upgrade maven; fi
 
 before_script:
   - git clone https://github.com/macdavid313/cl-parametric-types.git macdavid313/cl-parametric-types
@@ -47,7 +47,7 @@ before_script:
             (terpri)
             (princ *features*)
             (terpri)'
-  - if [[ $LISP == "sbcl-bin" ]]; then ros -e "(ql:quickload '(:alexandria :trivial-features :cl-parametric-types :cl-reexport))"; fi
+  - if [[ $LISP == "sbcl-bin" ]]; then ros -e "(ql:quickload '(:alexandria :trivial-features :cffi))"; fi
 
 script:
   - ros install prove

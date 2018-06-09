@@ -1,7 +1,7 @@
 ;;;; gamma.lisp
-(in-package #:chenyi.special)
+(in-package #:chenyi)
 
-(defvar %fact-table%
+(defvar %factorial-table%
   (let* ((lst '((0 .  1)
                 (1 .  1)
                 (2 .  2)
@@ -44,55 +44,59 @@
 (defun factorial (n)
   "Compute the Factorial of n.
 Signal a domain-error if n is not a non-negative integer."
-  (declare (dynamic-extent n)
-           (optimize speed (safety 0) (space 0)))
-  (cond ((not (cy.sys:non-negative-integer-p n))
-         (error 'domain-error :operation "Factorial"))
+  (declare (optimize speed (safety 0) (space 0)))
+  (cond ((not (non-negative-integer-p n))
+         (error 'domain-error :operation "Factorial" :expect "Non-Negative Integer"))
         ((<= n 33)
          (multiple-value-bind (res res-existed-p)
-             (gethash n %fact-table%)
+             (gethash n %factorial-table%)
            (declare (ignorable res-existed-p))
            res))
         (t (loop for i from 34 to n
-              with product = (gethash 33 %fact-table%)
+              with product = (gethash 33 %factorial-table%)
               do (setf product (* product i))
               finally (return product)))))
 
-#+cffi
+#+(cffi (or darwin linx))
 (defun %gamma/f32 (x)
   (declare (type single-float x)
            (dynamic-extent x)
            (optimize speed (safety 0) (space 0)))
   (cond ((minusp x) (error 'domain-error :operation "Gamma"))
-        (t (foreign-funcall "tgammaf" :float x :float))))
+        (t (cffi:foreign-funcall "tgammaf" :float x :float))))
   
-#+cffi
+#+(cffi (or darwin linx))
 (defun %gamma/f64 (x)
   (declare (type double-float x)
            (dynamic-extent x)
            (optimize speed (safety 0) (space 0)))
   (cond ((minusp x) (error 'domain-error :operation "Gamma"))
-        (t (foreign-funcall "tgamma" :double x :double))))
+        (t (cffi:foreign-funcall "tgamma" :double x :double))))
 
 (defun gamma (x)
   "Compute the Gamma function of x.
 Signal domain-error if x < 0; Return Inf if x equals to 0 or a floating-point-overflow condition is signaled."
-  (handler-bind ((floating-point-overflow
-                  (lambda (c)
-                    (declare (ignore c))
-                    (return-from gamma inf))))
-    (cond ((zerop x) inf)
-          (t (typecase x
-               (integer (factorial (- x 1)))
-               (single-float (%gamma/f32 x))
-               (double-float (%gamma/f64 x))
-               (real (%gamma/f64 (coerce x 'double-float)))
-               (complex (exp (%lgamma/complex-f64
-                              (let ((p (realpart x))
-                                    (q (imagpart x)))
-                                (cy.sys:ensure-double-float (p q)
-                                  (complex p q))))))
-               (t (error 'domain-error :operation "Gamma")))))))
+  (handler-case
+      (cond ((zerop x) inf)
+            (t (typecase x
+                 (integer (factorial (- x 1)))
+                 (float32 (%gamma/f32 x))
+                 (float64 (%gamma/f64 x))
+                 (rational (%gamma/f64 (float x 0d0)))
+                 ;; (complex (exp (%lgamma/complex-f64
+                 ;;                (let ((p (realpart x))
+                 ;;                      (q (imagpart x)))
+                 ;;                  (cy.sys:ensure-double-float (p q)
+                 ;;                                              (complex p q))))))
+                 (t (error 'domain-error :operation "Gamma" :expect "Number")))))
+    (floating-point-overflow (c)
+      (declare (ignore c))
+      inf)))
+
+(define-compiler-macro gamma (&whole form &environment env x)
+  (cond ((constantp x env)
+         (gamma (constant-form-value x env)))
+        (t form)))
 
 #+cffi
 (defun %lgamma-r/f32 (x)
@@ -128,7 +132,7 @@ Signal domain-error if x < 0; Return Inf if x equals to 0 or a floating-point-ov
   (declare (dynamic-extent x)
            (optimize speed (safety 0) (space 0)))
   (typecase x
-    (cy.sys:non-negative-integer
+    (non-negative-integer
      (log (coerce (factorial x) 'double-float)))
     (t (error 'domain-error :operation "lfact"))))
 

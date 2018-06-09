@@ -1,5 +1,5 @@
 ;;;; conditions.lisp
-(in-package #:chenyi.sys)
+(in-package #:chenyi)
 
 (define-condition domain-error (arithmetic-error)
   ((expect :initarg :expect :type simple-string :initform nil

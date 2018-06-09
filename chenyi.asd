@@ -24,42 +24,24 @@
   :author "David Gu"
   :license ""
   :depends-on (#:alexandria
-               #:trivial-features               
-               #:cl-parametric-types
-               #:cl-reexport)
-               ;; #:cffi
-               ;; #:trivial-download
-               ;; #:trivial-extract)
+               #:trivial-features
+               #+(or darwin linux) #:cffi)
   :components ((:module "src"
                 :components
-                ((:file "packages")
-                 (:file "chenyi")))
-               (:module "src/sys"
-                :components
-                ((:file "types")
-                 (:file "utils")                 
+                ((:file "package")
                  (:file "conditions")
-                 (:file "gsl")
+                 (:file "types")
                  (:file "constants")
-                 (:file "expm1")
+                 (:file "utils")))
+               (:module "src/functions"
+                :components
+                ((:file "expm1")
                  (:file "log1p")
                  (:file "ldfrexp")
-                 (:file "invhyp")
                  (:file "hypot")
-                 (:file "fcmp"))))
-               ;; (:module "src/special"
-               ;;  :components
-               ;;  ((:file "gamma")
-               ;;   (:file "beta"))))
-               ;; (:module "src/rng"
-               ;;  :components               
-               ;;  ((:module "dSFMT"
-               ;;    :components     
-               ;;    ((:file "lib")
-               ;;     (:static-file "wrapper.c")
-               ;;     (:file "wrapper")
-               ;;     (:file "dSFMT")))
-               ;;   (:file "rand48"))))
+                 (:file "fcmp")
+                 ;; (:file "gamma")
+                 (:file "beta"))))
   :description "A Math Library for Common Lisp"
   :long-description
   #.(with-open-file (stream (merge-pathnames
