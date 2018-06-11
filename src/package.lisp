@@ -12,8 +12,8 @@
    ;;; Conditions
    #:domain-error #:domain-error-expected
    ;;; Types
-   #:float32 #:float64 #:complex/f32 #:complex/f64
-   #:float32-p #:float64-p #:complex/f32-p #:complex/f64-p
+   #:float32 #:float64 #:complex/rational #:complex/f32 #:complex/f64
+   #:float32-p #:float64-p #:complex/rational-p #:complex/f32-p #:complex/f64-p
    #:negative-fixnum #:nonostive-fixnum #:non-negative-fixnum #:positive-fixnum
    #:negative-integer #:nonostive-integer #:non-negative-integer #:positive-integer
    #:negative-rational #:nonostive-rational #:non-negative-rational #:positive-rational
@@ -51,7 +51,7 @@
    ;; #:acosh #:asinh #:atanh
    #:hypot #:hypot3
    ;;; Special Functions
-   #:factorial #:gamma #:lgamma #:beta)
+   #:factorial #:lfact #:gamma #:lgamma #:beta)
   (:documentation "This package contains basic definitions, including constants, elementary functions and utilities."))
 
 (eval-when (:load-toplevel)

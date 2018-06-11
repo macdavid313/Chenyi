@@ -1,7 +1,7 @@
 ;;;; utils.lisp
 (in-package #:chenyi)
 
-(declaim (inline eps))
+(declaim (inline eps signbit))
 
 ;;;; The IF* macro placed in the public domain by John Foderaro. 
 ;;;; See: http://www.franz.com/~jkf/ifstar.txt
@@ -169,3 +169,22 @@
   #+ecl (ext:constant-form-value form env)
   #+(or abcl lispworks) (cl:eval (cl:macroexpand form env))
   #+sbcl (sb-int:constant-form-value form env))
+
+(defmacro evalpoly (x &rest ps)
+  `(+ ,@(do ((res nil)
+             (lst ps (cdr lst))
+             (exp 0d0 (+ exp 1d0)))
+            ((null lst) (nreverse res))
+          (push `(* ,(car lst) (expt ,x ,exp))
+                res))))
+
+(defun signbit (x)
+  (typecase x
+    (float32 (cond ((zerop x)
+                    (if (zerop (ieee-floats:encode-float32 x)) nil t))
+                   (t (if (minusp x) t nil))))
+    (float64 (cond ((zerop x)
+                    (if (zerop (ieee-floats:encode-float64 x)) nil t))
+                   (t (if (minusp x) t nil))))
+    (real (if (minusp x) t nil))
+    (t (error 'domain-error :operation "signbit" :expect "Real"))))

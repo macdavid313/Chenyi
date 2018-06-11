@@ -6,12 +6,14 @@
 (in-package #:chenyi)
 
 (declaim (inline %fcmp-check-type)
-         (type double-float *fcmp-epsilon*)
-         (ftype (function (double-float double-float real) (integer -1 1)) fcmp))
+         (type float64 *fcmp-epsilon*)
+         (ftype (function (float64 float64 &optional real) (integer -1 1)) fcmp))
 
-(defun fcmp (x1 x2 epsilon)
+(defvar *fcmp-epsilon* double-float-epsilon "The default epsilon used by fcmp.")
+
+(defun fcmp (x1 x2 &optional (epsilon *fcmp-epsilon*))
   "This function determines whether x1 and x2 (must both be double-float) are approximately equal to a relative accuracy epsilon. It returns 1 if x1 > x2, -1 if x1 < x2 or 0 that if x1 \"equals\" to x2."
-  (declare (type double-float x1 x2)
+  (declare (type float64 x1 x2)
            (type real epsilon)
            (dynamic-extent x1 x2 epsilon)
            (optimize speed (safety 1) (space 0)))
@@ -34,13 +36,11 @@
           ((< difference (- delta)) -1)
           (t 0))))
 
-(defvar *fcmp-epsilon* double-float-epsilon "The default epsilon used by fcmp.")
-
 (defun %fcmp-check-type (name lst)
   (declare (type simple-string name)
            (type cons lst)
            (optimize speed (safety 0) (space 0)))
-  (unless (every (lambda (x) (typep x 'double-float)) lst)
+  (unless (every 'float64-p lst)
     (error 'domain-error :operation name :expect "Double-Float")))
 
 (defun fcmp< (number &rest more-numbers)

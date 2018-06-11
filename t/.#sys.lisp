@@ -1,1 +1,0 @@
-david@david-Linux-Mint.5866:1528508470

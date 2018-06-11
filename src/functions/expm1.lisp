@@ -17,22 +17,25 @@
   
   (defun expm1 (x)
     "Accurately compute e^x - 1"
-    (handler-case (typecase x
-                    (float32 (%expm1/f32 x))
-                    (float64 (%expm1/f64 x))
-                    (rational (%expm1/f64 (float x 0d0)))
-                    ((complex rational) (let* ((r (realpart x))
-                                               (i (imagpart x))
-                                               (x (complex (float r 0d0)
-                                                           (float i 0d0))))
-                                          (- (exp x) 1)))
-                    (complex (- (exp x) 1))
-                    (t (error 'domain-error :operation "expm1" :expect "Number")))
+    (handler-case
+        (cond ((or (nan-p x) (infinity-p x)) x)
+              (t (typecase x
+                   (float32 (%expm1/f32 x))
+                   (float64 (%expm1/f64 x))
+                   (rational (%expm1/f64 (float x 0d0)))
+                   (complex/rational (let* ((r (realpart x))
+                                            (i (imagpart x))
+                                            (x (complex (float r 0d0)
+                                                        (float i 0d0))))
+                                       (- (exp x) 1)))
+                   (complex (- (exp x) 1))
+                   (t (error 'domain-error :operation "expm1" :expect "Number")))))
       (floating-point-overflow (c)
         (declare (ignore c))
         (typecase x
           (real (inf x))
-          (complex (inf (complex -inf (imagpart x))))))))
+          (complex/rational (inf (cis (float (imagpart x) 0d0))))
+          (complex (inf (cis (imagpart x))))))))
   ) ;; end of progn
 
 #-(and cffi (or darwin linux))
@@ -57,7 +60,7 @@
     (handler-case (typecase x
                     ((or float32 float64) (%expm1/float x))
                     (rational (%expm1/float (float x 0d0)))
-                    ((complex rational) (let* ((r (realpart x))
+                    (complex/rational (let* ((r (realpart x))
                                                (i (imagpart x))
                                                (x (complex (float r 0d0)
                                                            (float i 0d0))))
@@ -68,7 +71,8 @@
         (declare (ignore c))
         (typecase x
           (real (inf x))
-          (complex (inf (complex -inf (imagpart x))))))))
+          (complex/rational (inf (cis (float (imagpart x) 0d0))))
+          (complex (inf (cis (imagpart x))))))))
   ) ;; end of progn
                              
 (define-compiler-macro expm1 (&whole form &environment env x)

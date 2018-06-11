@@ -3,13 +3,24 @@
 
 #+(and cffi (or darwin linux))
 (defun hypot (x y)
+  "It computes the value of sqrt(x^2 + y^2) in a way that avoids overflow (when x and y are real numbers)."
   (let ((lst (list x y)))
     (declare (dynamic-extent lst))
     (handler-case
-        (cond ((every 'float32-p lst) (cffi:foreign-funcall "hypotf" :float x :float y :float))
-              ((every 'float64-p lst) (cffi:foreign-funcall "hypot" :double x :double y :double))
+        (cond ((every 'float32-p lst)
+               (cond ((or (infinity-p x) (infinity-p y)) inf32)
+                     ((or (nan-p x) (nan-p y)) #+linux nan32 #-linux nan)
+                     (t (cffi:foreign-funcall "hypotf" :float x :float y :float))))
+              ((every 'float64-p lst)
+               (cond ((or (infinity-p x) (infinity-p y)) inf)
+                     ((or (nan-p x) (nan-p y)) nan)
+                     (t (cffi:foreign-funcall "hypot" :double x :double y :double))))
               ((every 'rationalp lst) (cffi:foreign-funcall
                                        "hypot" :double (float x 0d0) :double (float y 0d0) :double))
+              ((every 'complex/rational-p lst)
+               (let ((x (coerce x 'complex/f64))
+                     (y (coerce y 'complex/f64)))
+                 (sqrt (+ (* x x) (* y y)))))
               ((every 'numberp lst) (sqrt (+ (* x x) (* y y))))
               (t (error 'domain-error :operation "hypot" :expect "Number")))
       (floating-point-overflow (c)
@@ -47,7 +58,11 @@
       (declare (dynamic-extent lst))
       (handler-case
           (cond ((every 'floatp lst) (%hypot/float x y))
-                ((every 'realp lst) (%hypot/float (float x 0d0) (float y 0d0)))
+                ((every 'rational lst) (%hypot/float (float x 0d0) (float y 0d0)))
+                ((every 'complex/rational-p lst)
+                 (let ((x (coerce x 'complex/f64))
+                       (y (coerce y 'complex/f64)))
+                   (sqrt (+ (* x x) (* y y)))))
                 ((every 'numberp lst) (sqrt (+ (* x x) (* y y))))
                 (t (error 'domain-error :operation "hypot" :expect "Number")))
       (floating-point-overflow (c)
@@ -96,7 +111,7 @@
                       (* (/ zabs w) (/ zabs w))))))))
 
 (defun hypot3 (x y z)
-  "It computes the value of sqrt(x^2 + y^2 + z^2) in a way that avoids overflow (when x and y are real numbers)."
+  "It computes the value of sqrt(x^2 + y^2 + z^2) in a way that avoids overflow (when x, y, and z are real numbers)."
   (let ((lst (list x y z)))
     (declare (dynamic-extent lst))
     (handler-case
@@ -106,6 +121,11 @@
                                             (y (float y 0d0))
                                             (z (float z 0d0)))
                                         (%hypot3/f64 x y z)))
+              ((every 'complex/rational-p lst)
+                 (let ((x (coerce x 'complex/f64))
+                       (y (coerce y 'complex/f64))
+                       (z (coerce z 'complex/f64)))
+                   (sqrt (+ (* x x) (* y y) (* z z)))))
               ((every 'numberp lst)
                (sqrt (+ (* x x) (* y y) (* z z))))
               (t (error 'domain-error :operation "hypot3" :expect "Number")))

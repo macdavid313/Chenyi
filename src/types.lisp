@@ -1,7 +1,7 @@
 ;;;; types.lisp
 (in-package #:chenyi)
 
-(declaim (inline float32-p float64-p complex/f32-p complex/f64-p)
+(declaim (inline float32-p float64-p complex/rational-p complex/f32-p complex/f64-p)
          (inline negative-fixnum-p non-postive-fixnum-p non-negative-fixnum-p positive-fixnum-p
                  negative-integer-p non-postive-integer-p non-negative-integer-p positive-integer-p
                  negative-rational-p non-postive-rational-p non-negative-rational-p positive-rational-p
@@ -15,13 +15,33 @@
                  negative-long-float-p non-postive-long-float-p non-negative-long-float-p positive-long-float-p))
 
 ;;; Synonyms
-(deftype float32 () 'single-float)
-(defun float32-p (x) (typep x 'float32))
-(deftype float64 () 'double-float)
-(defun float64-p (x) (typep x 'float64))
-(deftype complex/f32 () '(complex single-float))
+(deftype float32 (&optional (low '* low-p) (high '* high-p))
+  (if (or low-p high-p)
+      `(single-float ,low ,high)
+      'single-float))
+
+(defun float32-p (x &optional (low '* low-p) (high '* high-p))
+  (if (or low-p high-p)
+      (typep x `(float32 ,low ,high))
+      (typep x 'float32)))
+
+(deftype float64 (&optional (low '* low-p) (high '* high-p))
+  (if (or low-p high-p)
+      `(double-float ,low ,high)
+      'double-float))
+
+(defun float64-p (x &optional (low '* low-p) (high '* high-p))
+  (if (or low-p high-p)
+      (typep x `(float64 ,low ,high))
+      (typep x 'float64)))
+
+(deftype complex/rational () '(complex rational))
+(defun complex/rational-p (x) (typep x 'complex/rational))
+
+(deftype complex/f32 () '(complex float32))
 (defun complex/f32-p (x) (typep x 'complex/f32))
-(deftype complex/f64 () '(complex double-float))
+
+(deftype complex/f64 () '(complex float64))
 (defun complex/f64-p (x) (typep x 'complex/f64))
 
 ;;; Sub-interval Numerical Types for Common Lisp

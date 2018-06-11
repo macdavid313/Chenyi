@@ -25,6 +25,7 @@
   :license ""
   :depends-on (#:alexandria
                #:trivial-features
+               #:ieee-floats
                #+(or darwin linux) #:cffi)
   :components ((:module "src"
                 :components
@@ -40,7 +41,7 @@
                  (:file "ldfrexp")
                  (:file "hypot")
                  (:file "fcmp")
-                 ;; (:file "gamma")
+                 (:file "gamma")
                  (:file "beta"))))
   :description "A Math Library for Common Lisp"
   :long-description
