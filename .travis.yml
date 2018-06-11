@@ -47,7 +47,7 @@ before_script:
             (terpri)
             (princ *features*)
             (terpri)'
-  - if [[ $LISP == "sbcl-bin" ]]; then ros -e "(ql:quickload '(:alexandria :trivial-features :cffi))"; fi
+  - if [[ $LISP == "sbcl-bin" ]]; then ros -e "(ql:quickload '(:alexandria :trivial-features :ieee-floats :cffi))"; fi
 
 script:
   - ros install prove
