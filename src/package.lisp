@@ -57,7 +57,7 @@
 (eval-when (:load-toplevel)
   (let ((type (lisp-implementation-type))
         (version (lisp-implementation-version)))
-    #-(or abcl allegro ccl ecl lispworks sbcl)
+    #-(or abcl allegro ccl cmucl ecl lispworks sbcl)
     (error "Your lisp ~a-~a is not supported yet." type version)
     #+(and ecl (or windows darwin))
     (warn "Your lisp ~a-~a doesn't support the not-a-number value of type single-float (NaN32) natively."
