@@ -131,7 +131,6 @@
     (test-rel (expm1 inf) inf re "(expm1 Inf)")
     (test-rel/complex (expm1 #C(10 20)) #C(8987.60557600688d0 20108.957337683332d0) re "(expm1 #C(10 20))")
     (test-rel/complex (expm1 #C(-1000 -20)) #C(-1d0 0d0) re "(expm1 #C(-1000 -20))")
-    (test-rel/complex (expm1 #C(-1000 -20)) #C(-1d0 0d0) re "(expm1 #C(-1d0 0d0))")
     (test-rel/complex (expm1 #C(1000 -20)) (complex inf -inf) re "(expm1 #C(1000 -20))")
     (test-rel/complex (expm1 #C(1000 -2000)) (complex -inf -inf) re "(expm1 #C(1000 -2000))")))
 
@@ -315,7 +314,8 @@
                 (2 . 1)
                 (3 . 2)
                 (3.235d0 . 2.510765325008696d0)
-                (100.567d0 . 1.2690263959887244d157))))
+                #+linux (100.567d0 . 1.2690263959887244d157)
+                #+darwin (100.567d0 . 1.2690263959886849d157))))
     (loop for (x . expected) in data
        do (let ((res (gamma x)))
             (test-rel res expected re (format nil "(gamma ~a) --> ~a" x res))))
